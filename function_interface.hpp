@@ -35,133 +35,133 @@
 #define LUM_LIGHT 95
 
 /**
- * @brief comboBoxFormat - format stylesheet
+ * @brief guiFormatComboBox - format stylesheet
  * @param QComboBox - ui element
  */
-void comboBoxFormat(const QComboBox&);
+void guiFormatComboBox(const QComboBox&);
 
 /**
- * @brief comboBoxUpdate - update QComboBox with new items
- * @param QComboBox - ui element
- * @param vector<string> - list of strings to display
- */
-void comboBoxUpdate(QComboBox&, const std::vector<std::string>&);
-
-/**
- * @brief groubBoxFormat - format stylesheet
+ * @brief guiFormatGroubBox - format stylesheet
  * @param QGroupBox - ui element
  */
-void groubBoxFormat(const QGroupBox&);
+void guiFormatGroubBox(const QGroupBox&);
 
 /**
- * @brief labelFormat - format stylesheet
+ * @brief guiFormatLabel - format stylesheet
  * @param QLabel - ui element
  * @param double - hue
  * @param double - saturation
  * @param double - luminosity
  * @param bool - bold
  */
-void labelFormat(const QLabel&, const double, const double, const double, const bool);
+void guiFormatLabel(const QLabel&, const double, const double, const double, const bool);
 
 /**
- * @brief lineEditClear - clear all line edits that are children of widget
- * @param QWidget - widget to clear the child line edits of
- */
-void lineEditClear(const QWidget&);
-
-/**
- * @brief lineEditFormat - format stylesheet
+ * @brief guiFormatLineEdit - format stylesheet
  * @param QLineEdit - ui element
  */
-void lineEditFormat(const QLineEdit&);
+void guiFormatLineEdit(const QLineEdit&);
 
 /**
- * @brief lineEditSetPlaceholder - set placeholder text with formatted number
- * @param QLineEdit - ui element
- * @param double - value to display
- */
-void lineEditSetPlaceholder(QLineEdit&, const double);
-
-/**
- * @brief lineEditSetPlaceholder - set placeholder text with string
- * @param QLineEdit - ui element
- * @param string - string to display
- */
-void lineEditSetPlaceholder(QLineEdit&, const std::string&);
-
-/**
- * @brief lineEditSetText - set line edit text with formatted number
- * @param QLineEdit - ui element
- * @param double - value to display
- */
-void lineEditSetText(QLineEdit&, const double);
-
-/**
- * @brief listWidgetFormat - format stylesheet
+ * @brief guiFormatListWidget - format stylesheet
  * @param QListWidget - ui element
  */
-void listWidgetFormat(const QListWidget&);
+void guiFormatListWidget(const QListWidget&);
 
 /**
- * @brief progressBarFormat - format stylesheet
+ * @brief guiFormatProgressBar - format stylesheet
  * @param QProgressBar - ui element
  */
-void progressBarFormat(const QProgressBar&);
+void guiFormatProgressBar(const QProgressBar&);
 
 /**
- * @brief pushButtonFormat - format stylesheet
+ * @brief guiFormatPushButton - format stylesheet
  * @param QPushButton - ui element
  */
-void pushButtonFormat(const QPushButton&  );
+void guiFormatPushButton(const QPushButton&  );
 
 /**
- * @brief scrollBarFormat - format stylesheet
+ * @brief guiFormatScrollBar - format stylesheet
  * @param QScrollBar - ui element
  */
-void scrollBarFormat(const QScrollBar&);
+void guiFormatScrollBar(const QScrollBar&);
 
 /**
- * @brief stackedWidgetFormat - format stylesheet
+ * @brief guiFormatStackedWidget - format stylesheet
  * @param QStackedWidget - ui element
  */
-void stackedWidgetFormat(const QStackedWidget&);
+void guiFormatStackedWidget(const QStackedWidget&);
 
 /**
- * @brief tableWidgetFormat - format stylesheet
+ * @brief guiFormatTableWidget - format stylesheet
  * @param QTableWidget - ui element
  */
-void tableWidgetFormat(const QTableWidget&);
+void guiFormatTableWidget(const QTableWidget&);
 
 /**
- * @brief textBrowserFormat - format stylesheet
+ * @brief guiFormatTextBrowser - format stylesheet
  * @param QTextBrowser - ui element
  */
-void textBrowserFormat(const QTextBrowser&);
+void guiFormatTextBrowser(const QTextBrowser&);
 
 /**
- * @brief toolBarFormat - format stylesheet
+ * @brief guiFormatToolBar - format stylesheet
  * @param QToolBar - ui element
  */
-void toolBarFormat(const QToolBar&);
+void guiFormatToolBar(const QToolBar&);
 
 /**
- * @brief toolButtonFormat - format stylesheet
+ * @brief guiFormatToolButton - format stylesheet
  * @param QToolButton - ui element
  */
-void toolButtonFormat(const QToolButton&);
+void guiFormatToolButton(const QToolButton&);
 
 /**
- * @brief widgetFormat - format stylesheet
+ * @brief guiFormatWidget - format stylesheet
  * @param QWidget - ui element
  * @param double - hue
  * @param double - saturation
  * @param double - luminosity
  */
-void widgetFormat(const QWidget&, const double, const double, const double);
+void guiFormatWidget(QWidget&, const double, const double, const double);
 
 /**
- * @brief lineEditGetText - get line edit text if available, otherwise grab placeholder text
+ * @brief guiClearLineEdits - clear all line edits that are children of widget
+ * @param QWidget - widget to clear the child line edits of
+ */
+void guiClearLineEdits(const QWidget&);
+
+/**
+ * @brief guiSetPlaceholder - set placeholder text with formatted number
+ * @param QLineEdit - ui element
+ * @param double - value to display
+ */
+void guiSetPlaceholder(QLineEdit&, const double);
+
+/**
+ * @brief guiSetPlaceholder - set placeholder text with string
+ * @param QLineEdit - ui element
+ * @param string - string to display
+ */
+void guiSetPlaceholder(QLineEdit&, const std::string&);
+
+/**
+ * @brief guiSetText - set line edit text with formatted number
+ * @param QLineEdit - ui element
+ * @param double - value to display
+ */
+void guiSetText(QLineEdit&, const double);
+
+/**
+ * @brief guiUpdateComboBox - update QComboBox with new items
+ * @param QComboBox - ui element
+ * @param vector<string> - list of strings to display
+ */
+void guiUpdateComboBox(QComboBox&, const std::vector<std::string>&);
+
+/**
+ * @brief guiGetText - get line edit text if available, otherwise grab placeholder text
  * @return
  */
-std::string lineEditGetText(const QLineEdit&);
+std::string guiGetText(const QLineEdit&);
 #endif // FUNCTIONINTERFACE_HPP

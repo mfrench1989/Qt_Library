@@ -4,7 +4,7 @@
 
 #include "function_interface.hpp"
 
-void comboBoxFormat(QComboBox& combo_box) {
+void guiFormatComboBox(QComboBox& combo_box) {
   combo_box.setStyleSheet(QString::fromStdString("QComboBox {background:" + stringColorHSL(HUE_BASE, SAT_BASE, 25) + ";" +
                                                 "color:" + stringColorHSL(HUE_BASE, SAT_GRAY, LUM_TEXT) + ";" +
                                                 "border: 2px solid" + stringColorHSL(HUE_BLUE, SAT_COLOR, 45) + ";" +
@@ -32,14 +32,7 @@ void comboBoxFormat(QComboBox& combo_box) {
                                                 "border-radius: 4px;}"));
 }
 
-void comboBoxUpdate(QComboBox& combo_box, const std::vector<std::string>& vector_label) {
-  combo_box.clear();
-  for (const std::string& string_label : vector_label) {
-      combo_box.addItem(QString::fromStdString(string_label));
-    }
-}
-
-void groubBoxFormat(QGroupBox& group_box) {
+void guiFormatGroubBox(QGroupBox& group_box) {
   group_box.setStyleSheet(QString::fromStdString("QGroupBox {background:" + stringColorHSL(HUE_BASE, SAT_BASE, LUM_DARK) + ";" +
                                                 "color:" + stringColorHSL(HUE_BASE, SAT_GRAY, LUM_TEXT) + ";" +
                                                 "border: 2px solid" + stringColorHSL(HUE_BASE, SAT_GRAY, LUM_GRAY) + ";" +
@@ -69,7 +62,7 @@ void groubBoxFormat(QGroupBox& group_box) {
                                                 "QGroupBox::indicator::pressed {background:" + stringColorHSL(HUE_BLUE, SAT_COLOR, 35) + ";}"));
 }
 
-void labelFormat(QLabel& label, const double hue, const double saturation, const double luminosity, const bool bold) {
+void guiFormatLabel(QLabel& label, const double hue, const double saturation, const double luminosity, const bool bold) {
   label.setStyleSheet(QString::fromStdString("QLabel {background:" + stringColorHSL(HUE_BASE, SAT_BASE, 25) + ";" +
                                              "color:" + stringColorHSL(HUE_BASE, SAT_GRAY, LUM_TEXT) + ";" +
                                              "border: " + (bold ? "6" : "2") + "px solid" + stringColorHSL(hue, saturation, luminosity) + ";" +
@@ -81,13 +74,7 @@ void labelFormat(QLabel& label, const double hue, const double saturation, const
                                              "border-radius: " + (bold ? "8" : "4") + "px;}"));
 }
 
-void lineEditClear(const QWidget& widget) {
-  for (QLineEdit* line_edit : widget.findChildren<QLineEdit*>()) {
-      line_edit->clear();
-    }
-}
-
-void lineEditFormat(QLineEdit& line_edit) {
+void guiFormatLineEdit(QLineEdit& line_edit) {
   line_edit.setStyleSheet(QString::fromStdString("QLineEdit {background:" + stringColorHSL(HUE_BASE, SAT_BASE, LUM_DARK) + ";" +
                                                 "color:" + stringColorHSL(HUE_BASE, SAT_GRAY, LUM_TEXT) + ";" +
                                                 "border: 2px solid" + stringColorHSL(HUE_BASE, SAT_GRAY, LUM_GRAY) + ";" +
@@ -100,33 +87,7 @@ void lineEditFormat(QLineEdit& line_edit) {
                                                 "color:" + stringColorHSL(HUE_BASE, SAT_GRAY, 50) + ";}"));
 }
 
-void lineEditSetPlaceholder(QLineEdit& line_edit, const double value_in) {
-  if (line_edit.validator()) {
-      QDoubleValidator *text_validator = line_edit.findChild<QDoubleValidator*>();
-      line_edit.setPlaceholderText(QString::number(value_in, 'f', text_validator->decimals()));
-    }
-  else {
-      line_edit.setPlaceholderText(QString::number(value_in));
-    }
-  line_edit.clear();
-}
-
-void lineEditSetPlaceholder(QLineEdit& line_edit, const std::string& string_in) {
-  line_edit.setPlaceholderText(QString::fromStdString(string_in));
-  line_edit.clear();
-}
-
-void lineEditSetText(QLineEdit& line_edit, const double value_in) {
-  if (line_edit.validator()) {
-      QDoubleValidator *text_validator = line_edit.findChild<QDoubleValidator*>();
-      line_edit.setText(QString::number(value_in, 'f', text_validator->decimals()));
-    }
-  else {
-      line_edit.setText(QString::number(value_in));
-    }
-}
-
-void listWidgetFormat(QListWidget& list_widget) {
+void guiFormatListWidget(QListWidget& list_widget) {
   list_widget.setStyleSheet(QString::fromStdString("QListWidget {background:" + stringColorHSL(HUE_BASE, SAT_BASE, LUM_DARK) + ";" +
                                                   "color:" + stringColorHSL(HUE_BASE, SAT_GRAY, LUM_TEXT) + ";" +
                                                   "border: 2px solid" + stringColorHSL(HUE_BASE, SAT_GRAY, LUM_GRAY) + ";" +
@@ -141,7 +102,7 @@ void listWidgetFormat(QListWidget& list_widget) {
                                                   "border-radius: 4px;}"));
 }
 
-void progressBarFormat(QProgressBar& progress_bar) {
+void guiFormatProgressBar(QProgressBar& progress_bar) {
   progress_bar.setStyleSheet(QString::fromStdString("QProgressBar {background:" + stringColorHSL(HUE_BASE, SAT_BASE, 25) + ";" +
                                                    "color:" + stringColorHSL(HUE_BASE, SAT_GRAY, LUM_TEXT) + ";" +
                                                    "border: 2px solid" + stringColorHSL(HUE_BLUE, SAT_COLOR, 45) + ";" +
@@ -151,7 +112,7 @@ void progressBarFormat(QProgressBar& progress_bar) {
                                                    "color:" + stringColorHSL(HUE_BASE, SAT_GRAY, 50) + ";}"));
 }
 
-void pushButtonFormat(QPushButton& push_button, double hue, double saturation) {
+void guiFormatPushButton(QPushButton& push_button, double hue, double saturation) {
   std::string style_string;
   if (push_button.isCheckable()) {
       style_string.append("QPushButton {background:" + stringColorHSL(HUE_BASE, SAT_BASE, 35) + ";" +
@@ -180,7 +141,7 @@ void pushButtonFormat(QPushButton& push_button, double hue, double saturation) {
   push_button.setStyleSheet(QString::fromStdString(style_string));
 }
 
-void scrollBarFormat(QScrollBar& scroll_bar) {
+void guiFormatScrollBar(QScrollBar& scroll_bar) {
   scroll_bar.setStyleSheet(QString::fromStdString("QScrollBar {background:" + stringColorHSL(HUE_BASE, SAT_BASE, LUM_DARK) + ";" +
                                                  "border: 2px solid" + stringColorHSL(HUE_BLUE, SAT_COLOR, 45) + ";" +
                                                  "border-radius: 4px;" +
@@ -210,7 +171,7 @@ void scrollBarFormat(QScrollBar& scroll_bar) {
                                                  "QScrollBar::sub-page {background:" + stringColorHSL(HUE_BASE, SAT_BASE, 25) + ";}"));
 }
 
-void stackedWidgetFormat(QStackedWidget& stacked_widget) {
+void guiFormatStackedWidget(QStackedWidget& stacked_widget) {
   stacked_widget.setStyleSheet(QString::fromStdString("QStackedWidget {background:" + stringColorHSL(HUE_BASE, SAT_BASE, LUM_DARK) + ";" +
                                                      "color:" + stringColorHSL(HUE_BASE, SAT_GRAY, LUM_TEXT) + ";"  +
                                                      "border-radius: 4px;}" +
@@ -220,7 +181,7 @@ void stackedWidgetFormat(QStackedWidget& stacked_widget) {
                                                      "border-radius: 4px;}"));
 }
 
-void tableWidgetFormat(QTableWidget& table_widget) {
+void guiFormatTableWidget(QTableWidget& table_widget) {
   table_widget.setStyleSheet(QString::fromStdString("QTableWidget {background:" + stringColorHSL(HUE_BASE, SAT_BASE, LUM_DARK) + ";" +
                                                    "color:" + stringColorHSL(HUE_BASE, SAT_GRAY, LUM_TEXT) + ";" +
                                                    "border: 2px solid" + stringColorHSL(HUE_BASE, SAT_GRAY, LUM_GRAY) + ";" +
@@ -247,7 +208,7 @@ void tableWidgetFormat(QTableWidget& table_widget) {
   table_widget.verticalHeader()->setDefaultAlignment(Qt::AlignCenter);
 }
 
-void textBrowserFormat(QTextBrowser& text_browser) {
+void guiFormatTextBrowser(QTextBrowser& text_browser) {
   text_browser.setStyleSheet(QString::fromStdString("QTextBrowser {color:" + stringColorHSL(HUE_BASE, SAT_GRAY, LUM_TEXT) + ";" +
                                                    "border: 2px solid" + stringColorHSL(HUE_BASE, SAT_GRAY, LUM_GRAY) + ";" +
                                                    "border-radius: 4px; padding: 4px; spacing: 4px;}" +
@@ -255,10 +216,10 @@ void textBrowserFormat(QTextBrowser& text_browser) {
                                                    "QTextBrowser::disabled {color:" + stringColorHSL(HUE_BASE, SAT_GRAY, 50) + ";}" +
 
                                                    "QTextEdit {background:" + stringColorHSL(HUE_BASE, SAT_BASE, 25) + ";}"));
-  widgetFormat(*text_browser.findChild<QWidget*>("qt_scrollarea_viewport"), HUE_BASE, SAT_BASE, 25);
+  guiFormatWidget(*text_browser.findChild<QWidget*>("qt_scrollarea_viewport"), HUE_BASE, SAT_BASE, 25);
 }
 
-void toolBarFormat(QToolBar& tool_bar) {
+void guiFormatToolBar(QToolBar& tool_bar) {
   tool_bar.setStyleSheet(QString::fromStdString("QToolBar {background:" + stringColorHSL(HUE_BASE, SAT_BASE, 35) + ";" +
                                                "border-radius: 0px; padding: 4px; spacing: 4px;" +
                                                "min-height: 48px;" +
@@ -267,7 +228,7 @@ void toolBarFormat(QToolBar& tool_bar) {
                                                "qproperty-toolButtonStyle: ToolButtonTextUnderIcon;}"));
 }
 
-void toolButtonFormat(QToolButton& tool_button) {
+void guiFormatToolButton(QToolButton& tool_button) {
   tool_button.setStyleSheet(QString::fromStdString("QToolButton {background:" + stringColorHSL(HUE_BASE, SAT_BASE, 35) + ";" +
                                                   "color:" + stringColorHSL(HUE_BASE, SAT_GRAY, LUM_TEXT) + ";"  +
                                                   "border-radius: 4px; padding: 4px; spacing: 4px;}" +
@@ -282,12 +243,51 @@ void toolButtonFormat(QToolButton& tool_button) {
                                                   "QToolButton::pressed {background:" + stringColorHSL(HUE_BLUE, SAT_COLOR, 35) + ";}"));
 }
 
-void widgetFormat(QWidget& widget, const double hue, const double saturation, const double luminosity) {
+void guiFormatWidget(QWidget& widget, const double hue, const double saturation, const double luminosity) {
   widget.setStyleSheet(QString::fromStdString("QWidget {background:" + stringColorHSL(hue, saturation, luminosity) + ";" +
                                               "color:" + stringColorHSL(HUE_BASE, SAT_GRAY, LUM_TEXT) + ";}" +
 
                                               "QWidget::disabled {background:" + stringColorHSL(hue, saturation, luminosity + 10) + ";" +
                                               "color:" + stringColorHSL(HUE_BASE, SAT_GRAY, 50) + ";}"));
+}
+
+void guiClearLineEdits(const QWidget& widget) {
+  for (QLineEdit* line_edit : widget.findChildren<QLineEdit*>()) {
+      line_edit->clear();
+    }
+}
+
+void guiSetPlaceholder(QLineEdit& line_edit, const double value_in) {
+  if (line_edit.validator()) {
+      QDoubleValidator *text_validator = line_edit.findChild<QDoubleValidator*>();
+      line_edit.setPlaceholderText(QString::number(value_in, 'f', text_validator->decimals()));
+    }
+  else {
+      line_edit.setPlaceholderText(QString::number(value_in));
+    }
+  line_edit.clear();
+}
+
+void guiSetPlaceholder(QLineEdit& line_edit, const std::string& string_in) {
+  line_edit.setPlaceholderText(QString::fromStdString(string_in));
+  line_edit.clear();
+}
+
+void guiSetText(QLineEdit& line_edit, const double value_in) {
+  if (line_edit.validator()) {
+      QDoubleValidator *text_validator = line_edit.findChild<QDoubleValidator*>();
+      line_edit.setText(QString::number(value_in, 'f', text_validator->decimals()));
+    }
+  else {
+      line_edit.setText(QString::number(value_in));
+    }
+}
+
+void guiUpdateComboBox(QComboBox& combo_box, const std::vector<std::string>& vector_label) {
+  combo_box.clear();
+  for (const std::string& string_label : vector_label) {
+      combo_box.addItem(QString::fromStdString(string_label));
+    }
 }
 
 std::string lineEditGetText(const QLineEdit& line_edit) {
