@@ -14,6 +14,7 @@ ObjectEvent::ObjectEvent(QObject *parent) : QObject(parent) {
 /*Public Methods*/
 /*================================================================*/
 void ObjectEvent::initSignal(Data_Connect* connect_in) {
+  /*WindowMain Slots*/
   if (connect_in->WindowMain) {
       QObject::connect(this, SIGNAL(signalMessage(std::string)),
                        connect_in->WindowMain, SLOT(slotMessage(std::string)), Qt::QueuedConnection);
