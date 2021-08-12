@@ -10,7 +10,7 @@ class ObjectEvent : public QObject {
 
 public:
   explicit ObjectEvent(QObject *parent = nullptr);
-  Q_INVOKABLE void initSignal(Data_Connect*);
+  Q_INVOKABLE void initConnect(const Init_Connect&);
 
 private:
   bool Flag_Debug = false;

@@ -8,16 +8,18 @@
 
 ObjectEvent::ObjectEvent(QObject *parent) : QObject(parent) {
   this->setObjectName("Event");
+
+  qRegisterMetaType<Event_Type>("Event_Type");
 }
 
 /*================================================================*/
 /*Public Methods*/
 /*================================================================*/
-void ObjectEvent::initSignal(Data_Connect* connect_in) {
+void ObjectEvent::initConnect(const Init_Connect& connect_in) {
   /*WindowMain Slots*/
-  if (connect_in->WindowMain) {
+  if (connect_in.WindowMain) {
       QObject::connect(this, SIGNAL(signalMessage(std::string)),
-                       connect_in->WindowMain, SLOT(slotMessage(std::string)), Qt::QueuedConnection);
+                       connect_in.WindowMain, SLOT(slotMessage(std::string)), Qt::QueuedConnection);
     }
 }
 
