@@ -15,7 +15,7 @@ class WindowLogin : public QMainWindow {
 public:
   explicit WindowLogin(QWidget* = nullptr);
   ~WindowLogin();
-  void initSignal(Data_Connect*);
+  void initConnect(const Init_Connect&);
   void initStyle();
   bool initConfig();
 

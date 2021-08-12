@@ -16,6 +16,8 @@ WindowLogin::WindowLogin(QWidget *parent) : QMainWindow(parent), ui(new Ui::Wind
   overseer_settings.beginGroup(this->objectName());
   restoreGeometry(overseer_settings.value("Position").toByteArray());
   overseer_settings.endGroup();
+
+  qRegisterMetaType<Mode_Login>("Mode_Login");
 }
 
 WindowLogin::~WindowLogin() {
@@ -30,20 +32,20 @@ WindowLogin::~WindowLogin() {
 /*================================================================*/
 /*Public Methods*/
 /*================================================================*/
-void WindowLogin::initSignal(Data_Connect* connect_in) {
+void WindowLogin::initConnect(const Init_Connect& connect_in) {
   QObject::connect(this, SIGNAL(signalModeLogin(Mode_Login)),
                    this, SLOT(slotModeLogin(Mode_Login)), Qt::QueuedConnection);
 
   /*ObjectEvent Slots*/
-  if (connect_in->ObjectEvent) {
+  if (connect_in.ObjectEvent) {
       QObject::connect(this, SIGNAL(signalEvent(Event_Type,std::string,std::string,std::string)),
-                       connect_in->ObjectEvent, SLOT(slotEvent(Event_Type,std::string,std::string,std::string)), Qt::QueuedConnection);
+                       connect_in.ObjectEvent, SLOT(slotEvent(Event_Type,std::string,std::string,std::string)), Qt::QueuedConnection);
     }
 
   /*WindowMain Slots*/
-  if (connect_in->WindowMain) {
+  if (connect_in.WindowMain) {
       QObject::connect(this, SIGNAL(signalModeLogin(Mode_Login)),
-                       connect_in->WindowMain, SLOT(slotModeLogin(Mode_Login)), Qt::QueuedConnection);
+                       connect_in.WindowMain, SLOT(slotModeLogin(Mode_Login)), Qt::QueuedConnection);
     }
 }
 
