@@ -13,7 +13,14 @@ enum class Event_Type {
   Success
 };
 
+enum class Mode_Login {
+  None,
+  User,
+  Admin
+};
+
 struct Data_Connect {
+  QObject* ObjectEvent;
   QObject* WindowMain;
 };
 
