@@ -43,7 +43,7 @@ bool filterLineEdit(QLineEdit* line_edit, QEvent* event_in) {
               /*Paste index of vector_copy in line edit if it's visible and enabled*/
               if (line_edit->isVisible() && line_edit->isEnabled()) {
                   if (stringIsNum(string_paste)) {
-                      lineEditSetText(*line_edit, stringToNum(string_paste));
+                      guiSetText(*line_edit, stringToNum(string_paste));
                     }
                   else {
                       line_edit->setText(QString::fromStdString(string_paste));
@@ -73,7 +73,7 @@ bool filterLineEdit(QLineEdit* line_edit, QEvent* event_in) {
       /*Bring background text forward*/
       else if ((key_event->key() == Qt::Key_Enter || key_event->key() == Qt::Key_Return) && line_edit->text().isEmpty()) {
           if (stringIsNum(line_edit->placeholderText().toStdString()) && line_edit->validator()) {
-              lineEditSetText(*line_edit, stringToNum(line_edit->placeholderText().toStdString()));
+              guiSetText(*line_edit, stringToNum(line_edit->placeholderText().toStdString()));
             }
           else {
               line_edit->setText(line_edit->placeholderText());
