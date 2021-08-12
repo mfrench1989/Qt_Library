@@ -6,11 +6,15 @@
 #define FILE_LOG ".log"
 
 enum class Event_Type {
+  Default,
   Debug,
   Error,
   Warning,
-  Success,
-  Default
+  Success
+};
+
+struct Data_Connect {
+  QObject* WindowMain;
 };
 
 #endif // DEFINE_DEFAULT_HPP
