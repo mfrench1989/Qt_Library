@@ -290,6 +290,6 @@ void guiUpdateComboBox(QComboBox& combo_box, const std::vector<std::string>& vec
     }
 }
 
-std::string lineEditGetText(const QLineEdit& line_edit) {
+std::string guiGetText(const QLineEdit& line_edit) {
   return (line_edit.text().isEmpty()) ? line_edit.placeholderText().toStdString() : line_edit.text().toStdString();
 }

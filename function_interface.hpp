@@ -38,13 +38,13 @@
  * @brief guiFormatComboBox - format stylesheet
  * @param QComboBox - ui element
  */
-void guiFormatComboBox(const QComboBox&);
+void guiFormatComboBox(QComboBox&);
 
 /**
  * @brief guiFormatGroubBox - format stylesheet
  * @param QGroupBox - ui element
  */
-void guiFormatGroubBox(const QGroupBox&);
+void guiFormatGroubBox(QGroupBox&);
 
 /**
  * @brief guiFormatLabel - format stylesheet
@@ -54,67 +54,67 @@ void guiFormatGroubBox(const QGroupBox&);
  * @param double - luminosity
  * @param bool - bold
  */
-void guiFormatLabel(const QLabel&, const double, const double, const double, const bool);
+void guiFormatLabel(QLabel&, const double, const double, const double, const bool);
 
 /**
  * @brief guiFormatLineEdit - format stylesheet
  * @param QLineEdit - ui element
  */
-void guiFormatLineEdit(const QLineEdit&);
+void guiFormatLineEdit(QLineEdit&);
 
 /**
  * @brief guiFormatListWidget - format stylesheet
  * @param QListWidget - ui element
  */
-void guiFormatListWidget(const QListWidget&);
+void guiFormatListWidget(QListWidget&);
 
 /**
  * @brief guiFormatProgressBar - format stylesheet
  * @param QProgressBar - ui element
  */
-void guiFormatProgressBar(const QProgressBar&);
+void guiFormatProgressBar(QProgressBar&);
 
 /**
  * @brief guiFormatPushButton - format stylesheet
  * @param QPushButton - ui element
  */
-void guiFormatPushButton(const QPushButton&  );
+void guiFormatPushButton(QPushButton&, double, double);
 
 /**
  * @brief guiFormatScrollBar - format stylesheet
  * @param QScrollBar - ui element
  */
-void guiFormatScrollBar(const QScrollBar&);
+void guiFormatScrollBar(QScrollBar&);
 
 /**
  * @brief guiFormatStackedWidget - format stylesheet
  * @param QStackedWidget - ui element
  */
-void guiFormatStackedWidget(const QStackedWidget&);
+void guiFormatStackedWidget(QStackedWidget&);
 
 /**
  * @brief guiFormatTableWidget - format stylesheet
  * @param QTableWidget - ui element
  */
-void guiFormatTableWidget(const QTableWidget&);
+void guiFormatTableWidget(QTableWidget&);
 
 /**
  * @brief guiFormatTextBrowser - format stylesheet
  * @param QTextBrowser - ui element
  */
-void guiFormatTextBrowser(const QTextBrowser&);
+void guiFormatTextBrowser(QTextBrowser&);
 
 /**
  * @brief guiFormatToolBar - format stylesheet
  * @param QToolBar - ui element
  */
-void guiFormatToolBar(const QToolBar&);
+void guiFormatToolBar(QToolBar&);
 
 /**
  * @brief guiFormatToolButton - format stylesheet
  * @param QToolButton - ui element
  */
-void guiFormatToolButton(const QToolButton&);
+void guiFormatToolButton(QToolButton&);
 
 /**
  * @brief guiFormatWidget - format stylesheet
