@@ -44,7 +44,7 @@ void guiFormatComboBox(QComboBox&);
  * @brief guiFormatGroubBox - format stylesheet
  * @param QGroupBox - ui element
  */
-void guiFormatGroubBox(QGroupBox&);
+void guiFormatGroupBox(QGroupBox&);
 
 /**
  * @brief guiFormatLabel - format stylesheet
@@ -130,6 +130,12 @@ void guiFormatWidget(QWidget&, const double, const double, const double);
  * @param QWidget - widget to clear the child line edits of
  */
 void guiClearLineEdits(const QWidget&);
+
+/**
+ * @brief guiInitStyle - initialize stylesheet for passed object
+ * @param QObject - object to style all child widgets of
+ */
+void guiInitStyle(const QObject&);
 
 /**
  * @brief guiSetPlaceholder - set placeholder text with formatted number

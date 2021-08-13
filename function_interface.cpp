@@ -32,7 +32,7 @@ void guiFormatComboBox(QComboBox& combo_box) {
                                                 "border-radius: 4px;}"));
 }
 
-void guiFormatGroubBox(QGroupBox& group_box) {
+void guiFormatGroupBox(QGroupBox& group_box) {
   group_box.setStyleSheet(QString::fromStdString("QGroupBox {background:" + stringColorHSL(HUE_BASE, SAT_BASE, LUM_DARK) + ";" +
                                                 "color:" + stringColorHSL(HUE_BASE, SAT_GRAY, LUM_TEXT) + ";" +
                                                 "border: 2px solid" + stringColorHSL(HUE_BASE, SAT_GRAY, LUM_GRAY) + ";" +
@@ -254,6 +254,52 @@ void guiFormatWidget(QWidget& widget, const double hue, const double saturation,
 void guiClearLineEdits(const QWidget& widget) {
   for (QLineEdit* line_edit : widget.findChildren<QLineEdit*>()) {
       line_edit->clear();
+    }
+}
+
+void guiInitStyle(const QObject& object) {
+  for (QWidget* widget : object.findChildren<QWidget*>()) {
+      guiFormatWidget(*widget, HUE_BASE, SAT_BASE, 5);
+    }
+  for (QToolBar* toolbar : object.findChildren<QToolBar*>()) {
+      guiFormatToolBar(*toolbar);
+    }
+
+  for (QComboBox* combobox : object.findChildren<QComboBox*>()) {
+      guiFormatComboBox(*combobox);
+    }
+  for (QGroupBox* groupbox : object.findChildren<QGroupBox*>()) {
+      guiFormatGroupBox(*groupbox);
+    }
+  for (QLabel* label : object.findChildren<QLabel*>()) {
+      guiFormatLabel(*label, HUE_BASE, SAT_GRAY, LUM_GRAY, false);
+    }
+  for (QLineEdit* lineedit : object.findChildren<QLineEdit*>()) {
+      guiFormatLineEdit(*lineedit);
+    }
+  for (QListWidget* listwidget : object.findChildren<QListWidget*>()) {
+      guiFormatListWidget(*listwidget);
+    }
+  for (QProgressBar* progressbar : object.findChildren<QProgressBar*>()) {
+      guiFormatProgressBar(*progressbar);
+    }
+  for (QPushButton* pushbutton : object.findChildren<QPushButton*>()) {
+      guiFormatPushButton(*pushbutton, HUE_BLUE, SAT_COLOR);
+    }
+  for (QScrollBar* scrollbar : object.findChildren<QScrollBar*>()) {
+      guiFormatScrollBar(*scrollbar);
+    }
+  for (QStackedWidget* stackedwidget : object.findChildren<QStackedWidget*>()) {
+      guiFormatStackedWidget(*stackedwidget);
+    }
+  for (QTableWidget* tablewidget : object.findChildren<QTableWidget*>()) {
+      guiFormatTableWidget(*tablewidget);
+    }
+  for (QTextBrowser* textbrowser : object.findChildren<QTextBrowser*>()) {
+      guiFormatTextBrowser(*textbrowser);
+    }
+  for (QToolButton* toolbutton : object.findChildren<QToolButton*>()) {
+      guiFormatToolButton(*toolbutton);
     }
 }
 
