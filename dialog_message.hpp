@@ -11,7 +11,7 @@ class DialogMessage : public QDialog {
   Q_OBJECT
 
 public:
-  explicit DialogMessage(std::string = "", QWidget* = nullptr);
+  explicit DialogMessage(const std::string&, QWidget* = nullptr);
   ~DialogMessage();
 
 private:

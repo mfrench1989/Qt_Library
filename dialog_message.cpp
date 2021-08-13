@@ -5,7 +5,7 @@
 #include "dialog_message.hpp"
 #include "ui_dialog_message.h"
 
-DialogMessage::DialogMessage(std::string text_in, QWidget *parent) : QDialog(parent), ui(new Ui::DialogMessage) {
+DialogMessage::DialogMessage(const std::string& text_in, QWidget* parent) : QDialog(parent), ui(new Ui::DialogMessage) {
   ui->setupUi(this);
   this->setModal(false);
   if (parent) {
@@ -22,7 +22,7 @@ DialogMessage::DialogMessage(std::string text_in, QWidget *parent) : QDialog(par
   overseer_settings.endGroup();
 
   /*Format UI elements*/
-  guiFormatWidget(*this, HUE_BASE, SAT_BASE, 15);
+  guiFormatWidget(*this, HUE_BASE, SAT_BASE, 5);
   guiFormatLabel(*ui->label_Message, HUE_BASE, SAT_GRAY, LUM_GRAY, false);
 
   ui->label_Message->setText(QString::fromStdString(text_in));
