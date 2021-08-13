@@ -19,9 +19,4 @@ enum class Mode_Login {
   Admin
 };
 
-struct Init_Connect {
-  QObject* ObjectEvent = nullptr;
-  QObject* WindowMain = nullptr;
-};
-
 #endif // DEFINE_DEFAULT_HPP

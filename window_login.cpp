@@ -32,20 +32,17 @@ WindowLogin::~WindowLogin() {
 /*================================================================*/
 /*Public Methods*/
 /*================================================================*/
-void WindowLogin::initConnect(const Init_Connect& connect_in) {
-  QObject::connect(this, SIGNAL(signalModeLogin(Mode_Login)),
-                   this, SLOT(slotModeLogin(Mode_Login)), Qt::QueuedConnection);
-
-  /*ObjectEvent Slots*/
-  if (connect_in.ObjectEvent) {
+void WindowLogin::initConnect(const QObject* object_event, const std::vector<QObject*> vector_object) {
+  if (object_event) {
       QObject::connect(this, SIGNAL(signalEvent(Event_Type,std::string,std::string,std::string)),
-                       connect_in.ObjectEvent, SLOT(slotEvent(Event_Type,std::string,std::string,std::string)), Qt::QueuedConnection);
+                       object_event, SLOT(slotEvent(Event_Type,std::string,std::string,std::string)), Qt::QueuedConnection);
     }
 
-  /*WindowMain Slots*/
-  if (connect_in.WindowMain) {
+  QObject::connect(this, SIGNAL(signalModeLogin(Mode_Login)),
+                   this, SLOT(slotModeLogin(Mode_Login)), Qt::QueuedConnection);
+  for (const QObject* object_connect : vector_object) {
       QObject::connect(this, SIGNAL(signalModeLogin(Mode_Login)),
-                       connect_in.WindowMain, SLOT(slotModeLogin(Mode_Login)), Qt::QueuedConnection);
+                       object_connect, SLOT(slotModeLogin(Mode_Login)), Qt::QueuedConnection);
     }
 }
 

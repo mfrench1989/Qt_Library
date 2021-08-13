@@ -15,11 +15,10 @@ ObjectEvent::ObjectEvent(QObject *parent) : QObject(parent) {
 /*================================================================*/
 /*Public Methods*/
 /*================================================================*/
-void ObjectEvent::initConnect(const Init_Connect& connect_in) {
-  /*WindowMain Slots*/
-  if (connect_in.WindowMain) {
+void ObjectEvent::initConnect(const std::vector<QObject*> vector_connect) {
+  for (const QObject* object_connect : vector_connect) {
       QObject::connect(this, SIGNAL(signalMessage(std::string)),
-                       connect_in.WindowMain, SLOT(slotMessage(std::string)), Qt::QueuedConnection);
+                       object_connect, SLOT(slotMessage(std::string)), Qt::QueuedConnection);
     }
 }
 
