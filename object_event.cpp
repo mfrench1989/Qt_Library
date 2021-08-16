@@ -31,6 +31,7 @@ void ObjectEvent::initConnect(const std::vector<QObject*> vector_connect) {
 void ObjectEvent::slotEvent(Event_Type event_in, std::string object_in, std::string function_in, std::string text_in) {
   /*Format text_in for display & log*/
   std::string string_log = "[" + object_in + "]\t";
+  function_in = stringReplace(function_in, "*", "");
   switch (event_in) {
     case Event_Type::Debug: {
         if (Flag_Debug) {
