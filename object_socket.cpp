@@ -5,7 +5,7 @@
 #include "object_socket.hpp"
 
 ObjectSocket::ObjectSocket(const std::string& address_in, const std::string& port_in, QObject *parent) : QTcpSocket(parent) {
-  this->setObjectName("Client" + (parent ? this->parent()->objectName() : ""));
+  this->setObjectName("Socket" + (parent ? this->parent()->objectName() : ""));
   qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
 
   Socket_Address = address_in;
