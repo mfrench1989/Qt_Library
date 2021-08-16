@@ -17,7 +17,7 @@ public:
 private:
   Ui::DialogSelect *ui;
 
-  void closeEvent(QCloseEvent *close_event);
+  void closeEvent(QCloseEvent*);
 
 private slots:
   /*----------------------------------------------------------------*/
@@ -25,6 +25,10 @@ private slots:
   /*----------------------------------------------------------------*/
   void on_pushButton_Cancel_clicked();
   void on_pushButton_Select_clicked();
+
+signals:
+  void signalSelect(std::string);
+  void signalSelect(QString);
 };
 
 #endif // DIALOG_SELECT_HPP
