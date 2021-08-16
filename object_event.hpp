@@ -9,7 +9,7 @@ class ObjectEvent : public QObject {
   Q_OBJECT
 
 public:
-  explicit ObjectEvent(QObject *parent = nullptr);
+  explicit ObjectEvent(QObject* = nullptr);
   Q_INVOKABLE void initConnect(const std::vector<QObject*>);
   Q_INVOKABLE bool initConfig();
 
