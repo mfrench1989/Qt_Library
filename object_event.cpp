@@ -21,6 +21,12 @@ void ObjectEvent::initConnect(const std::vector<QObject*> vector_connect) {
     }
 }
 
+bool ObjectEvent::initConfig() {
+  slotEvent(Event_Type::Default, this->objectName().toStdString(), stringFuncInfo(this, __func__),
+            this->objectName().toStdString() + " configuration finished");
+  return true;
+}
+
 /*================================================================*/
 /*Private Methods*/
 /*================================================================*/

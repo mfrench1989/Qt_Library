@@ -73,9 +73,9 @@ void WindowLogin::closeEvent(QCloseEvent*) {
 void WindowLogin::slotModeLogin(Mode_Login mode_in) {
   /*Issue updated login/logout message if Flag_Login is changing*/
   if (Flag_Login != mode_in) {
-      Q_EMIT signalEvent(Event_Type::Default, this->objectName().toStdString(), stringFuncInfo(this, __func__), mode_in == Mode_Login::None ?
-                           std::string(Flag_Login == Mode_Login::Admin ? "Admin" : "User") + "Logout" :
-                           std::string(mode_in == Mode_Login::Admin ? "Admin" : "User") + "Login");
+      Q_EMIT signalEvent(Event_Type::Default, this->objectName().toStdString(), stringFuncInfo(this, __func__),
+                         mode_in == Mode_Login::None ? std::string(Flag_Login == Mode_Login::Admin ? "Admin" : "User") + "Logout" :
+                                                       std::string(mode_in == Mode_Login::Admin ? "Admin" : "User") + "Login");
     }
 
   Flag_Login = mode_in;
@@ -107,7 +107,8 @@ void WindowLogin::on_pushButton_Login_clicked() {
       Q_EMIT signalModeLogin(Mode_Login::User);
     }
   else {
-      Q_EMIT signalEvent(Event_Type::Default, this->objectName().toStdString(), stringFuncInfo(this, __func__), "Incorrect username or password");
+      Q_EMIT signalEvent(Event_Type::Default, this->objectName().toStdString(), stringFuncInfo(this, __func__),
+                         "Incorrect username or password");
       Q_EMIT signalModeLogin(Mode_Login::None);
     }
 }

@@ -11,6 +11,7 @@ class ObjectEvent : public QObject {
 public:
   explicit ObjectEvent(QObject *parent = nullptr);
   Q_INVOKABLE void initConnect(const std::vector<QObject*>);
+  Q_INVOKABLE bool initConfig();
 
 private:
   bool Flag_Debug = false;

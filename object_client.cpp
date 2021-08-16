@@ -114,19 +114,18 @@ void ObjectClient::slotClientQuit() {
 void ObjectClient::slotClientTimeout() {
   switch (Vector_Command.front().Type) {
     case Command_Type::Disconnect: {
-        Q_EMIT signalEvent(Event_Type::Error, this->objectName().toStdString(),
-                           stringFuncInfo(this, __func__), "Client disconnect timeout - forcing disconnect");
+        Q_EMIT signalEvent(Event_Type::Error, this->objectName().toStdString(), stringFuncInfo(this, __func__),
+                           "Client disconnect timeout - forcing disconnect");
         this->setSocketState(QAbstractSocket::UnconnectedState);
         break;
       }
     case Command_Type::Connect: {
-        Q_EMIT signalEvent(Event_Type::Error, this->objectName().toStdString(),
-                           stringFuncInfo(this, __func__), "Client connect timeout - " + Client_Address + ":" + Client_Port);
+        Q_EMIT signalEvent(Event_Type::Error, this->objectName().toStdString(), stringFuncInfo(this, __func__),
+                           "Client connect timeout - " + Client_Address + ":" + Client_Port);
         break;
       }
     case Command_Type::Write: {
-        Q_EMIT signalEvent(Event_Type::Error, this->objectName().toStdString(),
-                           stringFuncInfo(this, __func__), "Client write timeout");
+        Q_EMIT signalEvent(Event_Type::Error, this->objectName().toStdString(), stringFuncInfo(this, __func__), "Client write timeout");
         break;
       }
     }
@@ -142,21 +141,18 @@ void ObjectClient::slotSocketState(QAbstractSocket::SocketState state_in) {
   switch (state_in) {
     case QAbstractSocket::UnconnectedState: {
         if (Vector_Command.empty()) {
-            Q_EMIT signalEvent(Event_Type::Warning, this->objectName().toStdString(),
-                               stringFuncInfo(this, __func__), "Server disconnected");
+            Q_EMIT signalEvent(Event_Type::Warning, this->objectName().toStdString(), stringFuncInfo(this, __func__), "Server disconnected");
           }
         else if (Vector_Command.front().Type == Command_Type::Disconnect) {
             Time_Out->stop();
-            Q_EMIT signalEvent(Event_Type::Debug, this->objectName().toStdString(),
-                               stringFuncInfo(this, __func__), "Client disconnected");
+            Q_EMIT signalEvent(Event_Type::Debug, this->objectName().toStdString(), stringFuncInfo(this, __func__), "Client disconnected");
             Q_EMIT signalClientCommand(true);
           }
         else if (Vector_Command.front().Type == Command_Type::Connect) {
             /*Do Nothing*/
           }
         else {
-            Q_EMIT signalEvent(Event_Type::Error, this->objectName().toStdString(),
-                               stringFuncInfo(this, __func__), "Server disconnected");
+            Q_EMIT signalEvent(Event_Type::Error, this->objectName().toStdString(), stringFuncInfo(this, __func__), "Server disconnected");
           }
         break;
       }
@@ -169,8 +165,7 @@ void ObjectClient::slotSocketState(QAbstractSocket::SocketState state_in) {
     case QAbstractSocket::ConnectedState: {
         if (!Vector_Command.empty() && Vector_Command.front().Type == Command_Type::Connect) {
             Time_Out->stop();
-            Q_EMIT signalEvent(Event_Type::Debug, this->objectName().toStdString(),
-                               stringFuncInfo(this, __func__), "Client connected");
+            Q_EMIT signalEvent(Event_Type::Debug, this->objectName().toStdString(), stringFuncInfo(this, __func__), "Client connected");
             Q_EMIT signalClientCommand(true);
           }
         break;
