@@ -17,7 +17,7 @@ public:
 private:
   Ui::DialogOption *ui;
 
-  void closeEvent(QCloseEvent *close_event);
+  void closeEvent(QCloseEvent*);
 
 private slots:
   /*----------------------------------------------------------------*/
