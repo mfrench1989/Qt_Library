@@ -49,14 +49,14 @@ void WindowLogin::initConnect(const QObject* object_event, const std::vector<QOb
 void WindowLogin::initStyle() {
   guiFormatPushButton(*ui->pushButton_Logout, HUE_RED, SAT_COLOR);
 
-  Q_EMIT signalEvent(Event_Type::Default, this->objectName().toStdString(), Q_FUNC_INFO,
-                     "Window " + this->objectName().toStdString() + " stylesheet finished");
+  Q_EMIT signalEvent(Event_Type::Default, this->objectName().toStdString(), stringFuncInfo(this, __func__),
+                     this->objectName().toStdString() + " stylesheet finished");
 }
 
 bool WindowLogin::initConfig() {
   Q_EMIT signalModeLogin(Mode_Login::None);
-  Q_EMIT signalEvent(Event_Type::Default, this->objectName().toStdString(), Q_FUNC_INFO,
-                     "Window " + this->objectName().toStdString() + " configuration finished");
+  Q_EMIT signalEvent(Event_Type::Default, this->objectName().toStdString(), stringFuncInfo(this, __func__),
+                     this->objectName().toStdString() + " configuration finished");
   return true;
 }
 
@@ -73,7 +73,7 @@ void WindowLogin::closeEvent(QCloseEvent*) {
 void WindowLogin::slotModeLogin(Mode_Login mode_in) {
   /*Issue updated login/logout message if Flag_Login is changing*/
   if (Flag_Login != mode_in) {
-      Q_EMIT signalEvent(Event_Type::Default, this->objectName().toStdString(), Q_FUNC_INFO, mode_in == Mode_Login::None ?
+      Q_EMIT signalEvent(Event_Type::Default, this->objectName().toStdString(), stringFuncInfo(this, __func__), mode_in == Mode_Login::None ?
                            std::string(Flag_Login == Mode_Login::Admin ? "Admin" : "User") + "Logout" :
                            std::string(mode_in == Mode_Login::Admin ? "Admin" : "User") + "Login");
     }
@@ -107,7 +107,7 @@ void WindowLogin::on_pushButton_Login_clicked() {
       Q_EMIT signalModeLogin(Mode_Login::User);
     }
   else {
-      Q_EMIT signalEvent(Event_Type::Default, this->objectName().toStdString(), Q_FUNC_INFO, "Incorrect username or password");
+      Q_EMIT signalEvent(Event_Type::Default, this->objectName().toStdString(), stringFuncInfo(this, __func__), "Incorrect username or password");
       Q_EMIT signalModeLogin(Mode_Login::None);
     }
 }

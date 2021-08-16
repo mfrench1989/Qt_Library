@@ -21,8 +21,8 @@ public:
 
 private:
   Ui::WindowLogin *ui;
-  const std::string Admin_Name = "";
-  const std::string Admin_Pass = "";
+  const std::string Admin_Name = "Username";
+  const std::string Admin_Pass = "Password";
   const std::string User_Name = "";
   const std::string User_Pass = "";
   Mode_Login Flag_Login = Mode_Login::None;
