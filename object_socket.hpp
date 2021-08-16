@@ -37,18 +37,18 @@ private:
   void socketError(const std::string&, const std::string&);
 
 private slots:
-  void slotBytesRead();
-  void slotBytesWrite(qint64);
-  void slotChangeState(QAbstractSocket::SocketState);
+  void slotSocketBytesIn();
+  void slotSocketBytesOut(qint64);
+  void slotSocketChangeState(QAbstractSocket::SocketState);
   void slotSocketCommand(bool);
   void slotSocketQuit();
   void slotSocketTimeout();
 
 signals:
-  void signalSocketBytesIn(std::vector<char>);
-  void signalSocketCommand(bool);
-  void signalSocketFinish(bool);
+  void signalCommand(bool);
   void signalEvent(Event_Type, std::string, std::string, std::string);
+  void signalSocketComplete(bool);
+  void signalSocketIn(std::vector<char>);
 };
 
 #endif // OBJECTSOCKET_HPP
