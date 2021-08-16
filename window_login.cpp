@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <QSettings>
 
+#include "CPPLibrary/function_string.hpp"
 #include "function_interface.hpp"
 
 #include "window_login.hpp"
@@ -9,15 +10,14 @@
 WindowLogin::WindowLogin(QWidget *parent) : QMainWindow(parent), ui(new Ui::WindowLogin) {
   ui->setupUi(this);
   this->setContextMenuPolicy(Qt::NoContextMenu);
-  this->setObjectName("Login");
+  this->setObjectName("WindowLogin");
+  qRegisterMetaType<Mode_Login>("Mode_Login");
 
   /*Load position on creation*/
   QSettings overseer_settings(qApp->objectName(), "Window");
   overseer_settings.beginGroup(this->objectName());
   restoreGeometry(overseer_settings.value("Position").toByteArray());
   overseer_settings.endGroup();
-
-  qRegisterMetaType<Mode_Login>("Mode_Login");
 }
 
 WindowLogin::~WindowLogin() {

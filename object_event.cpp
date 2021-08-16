@@ -7,8 +7,7 @@
 #include "object_event.hpp"
 
 ObjectEvent::ObjectEvent(QObject *parent) : QObject(parent) {
-  this->setObjectName("Event");
-
+  this->setObjectName("ObjectEvent");
   qRegisterMetaType<Event_Type>("Event_Type");
 }
 
@@ -31,17 +30,16 @@ void ObjectEvent::initConnect(const std::vector<QObject*> vector_connect) {
 /*================================================================*/
 void ObjectEvent::slotEvent(Event_Type event_in, std::string object_in, std::string function_in, std::string text_in) {
   /*Format text_in for display & log*/
-  std::string string_log;
+  std::string string_log = "[" + object_in + "]\t";
   switch (event_in) {
     case Event_Type::Debug: {
-        string_log = "[" + object_in + "]\t";
         if (Flag_Debug) {
             Q_EMIT signalMessage(stringHTML(text_in, stringColorHSL(HUE_BLUE, SAT_COLOR, LUM_COLOR), true));
           }
         break;
       }
     case Event_Type::Error: {
-        string_log = "[" + object_in + "]\tERROR - " + function_in + ":\t";
+        string_log += "ERROR - " + function_in + ":\t";
         Q_EMIT signalMessage(stringHTML("[" + object_in + "]", stringColorHSL(HUE_BASE, SAT_GRAY, LUM_TEXT), true) + "\t" +
                              stringHTML("ERROR:\t" + text_in, stringColorHSL(HUE_RED, SAT_COLOR, LUM_COLOR), true));
         break;
