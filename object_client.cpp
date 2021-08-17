@@ -43,7 +43,7 @@ void ObjectClient::clientDisconnect() {
   Q_EMIT signalCommand(false);
 }
 
-void ObjectClient::clientWrite(std::vector<char> bytes_out) {
+void ObjectClient::clientWrite(const std::vector<char>& bytes_out) {
   bool flag_empty = Vector_Command.empty();
   Vector_Command.push_back({Command_Type::Connect, std::vector<char>()});
   Vector_Command.push_back({Command_Type::Write, bytes_out});

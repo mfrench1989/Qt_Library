@@ -13,7 +13,7 @@ public:
   explicit ObjectClient(const std::string&, const std::string&, QObject* = nullptr);
   void clientConnect();
   void clientDisconnect();
-  void clientWrite(std::vector<char>);
+  void clientWrite(const std::vector<char>&);
 
 private:
 #define WAIT_TIME 1000
