@@ -6,7 +6,6 @@
 
 ObjectServer::ObjectServer(const std::string& address_in, const std::string& port_in, QObject *parent) : QTcpServer(parent) {
   this->setObjectName("Server" + (parent ? this->parent()->objectName() : ""));
-  qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
 
   Server_Address = address_in;
   Server_Port = port_in;
@@ -49,21 +48,6 @@ void ObjectServer::serverError(const std::string& function_in, const std::string
 /*================================================================*/
 /*Private Slots*/
 /*================================================================*/
-void ObjectServer::slotServerBytesIn() {
-  if (!Server_Socket->bytesAvailable()) {
-      return;
-    }
-  QByteArray bytes_in = Server_Socket->readAll();
-  Q_EMIT signalServerIn(std::vector<char>(bytes_in.begin(), bytes_in.end()));
-}
-
-void ObjectServer::slotServerBytesOut(qint64 bytes_written) {
-  if (!Vector_Command.empty() && Vector_Command.front().Type == Command_Type::Write &&
-      static_cast<int>(bytes_written) == static_cast<int>(Vector_Command.front().Data.size())) {
-      Q_EMIT signalCommand(true);
-    }
-}
-
 void ObjectServer::slotServerCommand(bool flag_erase) {
   if (!Vector_Command.empty() && flag_erase) {
       Vector_Command.erase(Vector_Command.begin());
@@ -86,6 +70,7 @@ void ObjectServer::slotServerCommand(bool flag_erase) {
             std::copy(Vector_Command.front().Data.begin(), Vector_Command.front().Data.end(), bytes_out);
             Server_Socket->write(bytes_out, sizeof(bytes_out));
             Server_Socket->flush();
+            Q_EMIT signalCommand(true);
           }
         break;
       }
@@ -95,10 +80,9 @@ void ObjectServer::slotServerCommand(bool flag_erase) {
 void ObjectServer::slotServerConnect() {
   Server_Socket->close();
   Server_Socket = this->nextPendingConnection();
-  QObject::connect(Server_Socket, SIGNAL(readyRead()), this, SLOT(slotServerBytesIn()), Qt::DirectConnection);
-  QObject::connect(Server_Socket, SIGNAL(bytesWritten(qint64)), this, SLOT(slotServerBytesOut(qint64)), Qt::QueuedConnection);
+  QObject::connect(Server_Socket, SIGNAL(readyRead()), this, SLOT(slotServerRead()), Qt::DirectConnection);
   QObject::connect(Server_Socket, SIGNAL(disconnected()), this, SLOT(slotServerDisconnect()), Qt::QueuedConnection);
-  slotServerBytesIn();
+  slotServerRead();
 }
 
 void ObjectServer::slotServerDisconnect() {
@@ -107,6 +91,15 @@ void ObjectServer::slotServerDisconnect() {
 
 void ObjectServer::slotServerQuit() {
   this->close();
+  Server_Socket->close();
+}
+
+void ObjectServer::slotServerRead() {
+  if (!Server_Socket->bytesAvailable()) {
+      return;
+    }
+  QByteArray bytes_in = Server_Socket->readAll();
+  Q_EMIT signalServerIn(std::vector<char>(bytes_in.begin(), bytes_in.end()));
 }
 
 void ObjectServer::slotServerWrite(std::vector<char> bytes_out) {

@@ -1,7 +1,6 @@
 #ifndef OBJECTSERVER_HPP
 #define OBJECTSERVER_HPP
 
-//#include <QSocketNotifier>
 #include <QTcpServer>
 #include <QTcpSocket>
 
@@ -32,8 +31,7 @@ private:
   void serverError(const std::string&, const std::string&);
 
 private slots:
-  void slotServerBytesIn();
-  void slotServerBytesOut(qint64);
+  void slotServerRead();
   void slotServerCommand(bool);
   void slotServerConnect();
   void slotServerDisconnect();

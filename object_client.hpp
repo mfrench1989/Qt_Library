@@ -1,7 +1,6 @@
 #ifndef OBJECTCLIENT_HPP
 #define OBJECTCLIENT_HPP
 
-#include <QHostAddress>
 #include <QTcpSocket>
 #include <QTimer>
 
@@ -37,8 +36,7 @@ private:
   void clientError(const std::string&, const std::string&);
 
 private slots:
-  void slotClientBytesIn();
-  void slotClientBytesOut(qint64);
+  void slotClientRead();
   void slotClientChangeState(QAbstractSocket::SocketState);
   void slotClientCommand(bool);
   void slotClientQuit();

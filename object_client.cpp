@@ -1,4 +1,5 @@
 #include <QCoreApplication>
+#include <QHostAddress>
 
 #include "CPPLibrary/function_string.hpp"
 
@@ -15,13 +16,12 @@ ObjectClient::ObjectClient(const std::string& address_in, const std::string& por
   Time_Out->setSingleShot(true);
 
   QObject::connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(slotClientQuit()), Qt::DirectConnection);
-  QObject::connect(this, SIGNAL(readyRead()), this, SLOT(slotClientBytesIn()), Qt::DirectConnection);
+  QObject::connect(this, SIGNAL(readyRead()), this, SLOT(slotClientRead()), Qt::DirectConnection);
   QObject::connect(this, SIGNAL(signalEvent(Event_Type,std::string,std::string,std::string)),
                    parent, SIGNAL(signalEvent(Event_Type,std::string,std::string,std::string)), Qt::DirectConnection);
 
   QObject::connect(this, SIGNAL(stateChanged(QAbstractSocket::SocketState)),
                    this, SLOT(slotClientChangeState(QAbstractSocket::SocketState)), Qt::QueuedConnection);
-  QObject::connect(this, SIGNAL(bytesWritten(qint64)), this, SLOT(slotClientBytesOut(qint64)), Qt::QueuedConnection);
   QObject::connect(this, SIGNAL(signalCommand(bool)), this, SLOT(slotClientCommand(bool)), Qt::QueuedConnection);
   QObject::connect(Time_Out, SIGNAL(timeout()), this, SLOT(slotClientTimeout()), Qt::QueuedConnection);
 }
@@ -65,18 +65,6 @@ void ObjectClient::clientError(const std::string& function_in, const std::string
 /*================================================================*/
 /*Private Slots*/
 /*================================================================*/
-void ObjectClient::slotClientBytesIn() {
-  QByteArray bytes_in = this->readAll();
-  Q_EMIT signalClientIn(std::vector<char>(bytes_in.begin(), bytes_in.end()));
-}
-
-void ObjectClient::slotClientBytesOut(qint64 bytes_written) {
-  if (!Vector_Command.empty() && Vector_Command.front().Type == Command_Type::Write &&
-      static_cast<int>(bytes_written) == static_cast<int>(Vector_Command.front().Data.size())) {
-      Q_EMIT signalCommand(true);
-    }
-}
-
 void ObjectClient::slotClientChangeState(QAbstractSocket::SocketState state_in) {
   switch (state_in) {
     case QAbstractSocket::UnconnectedState: {
@@ -159,6 +147,7 @@ void ObjectClient::slotClientCommand(bool flag_erase) {
         std::copy(Vector_Command.front().Data.begin(), Vector_Command.front().Data.end(), bytes_out);
         this->write(bytes_out, sizeof(bytes_out));
         this->flush();
+        Q_EMIT signalCommand(true);
         break;
       }
     }
@@ -167,6 +156,11 @@ void ObjectClient::slotClientCommand(bool flag_erase) {
 void ObjectClient::slotClientQuit() {
   Vector_Command.clear();
   this->disconnectFromHost();
+}
+
+void ObjectClient::slotClientRead() {
+  QByteArray bytes_in = this->readAll();
+  Q_EMIT signalClientIn(std::vector<char>(bytes_in.begin(), bytes_in.end()));
 }
 
 void ObjectClient::slotClientTimeout() {
