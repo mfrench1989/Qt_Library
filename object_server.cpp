@@ -5,7 +5,7 @@
 #include "object_server.hpp"
 
 ObjectServer::ObjectServer(const std::string& address_in, const std::string& port_in, QObject *parent) : QTcpServer(parent) {
-  this->setObjectName("Server" + (parent ? this->parent()->objectName() : ""));
+  this->setObjectName((parent ? this->parent()->objectName() : "") + "Server");
 
   Server_Address = address_in;
   Server_Port = port_in;

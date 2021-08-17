@@ -8,7 +8,7 @@
 DialogMessage::DialogMessage(const std::string& text_in, QWidget* parent) : QDialog(parent), ui(new Ui::DialogMessage) {
   ui->setupUi(this);
   this->setModal(false);
-  this->setObjectName("Message" + (parent ? this->parent()->objectName() : ""));
+  this->setObjectName((parent ? this->parent()->objectName() : "") + "Message");
 
   /*Load position on creation*/
   QSettings overseer_settings(qApp->objectName(), "Dialog");

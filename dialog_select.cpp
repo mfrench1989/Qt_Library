@@ -9,7 +9,7 @@
 DialogSelect::DialogSelect(const std::vector<std::string>& vector_select, QWidget* parent) : QDialog(parent), ui(new Ui::DialogSelect) {
   ui->setupUi(this);
   this->setModal(false);
-  this->setObjectName("Select" + (parent ? this->parent()->objectName() : ""));
+  this->setObjectName((parent ? this->parent()->objectName() : "") + "Select");
 
   /*Load position on creation*/
   QSettings overseer_settings(qApp->objectName(), "Dialog");

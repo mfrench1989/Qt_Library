@@ -10,7 +10,7 @@ DialogOption::DialogOption(const std::string& text_in, const std::string& string
                            const std::string& string_reject, const int hue_reject, QWidget* parent) : QDialog(parent), ui(new Ui::DialogOption) {
   ui->setupUi(this);
   this->setModal(false);
-  this->setObjectName("Option" + (parent ? this->parent()->objectName() : ""));
+  this->setObjectName((parent ? this->parent()->objectName() : "") + "Option");
 
   /*Load position on creation*/
   QSettings overseer_settings(qApp->objectName(), "Dialog");
