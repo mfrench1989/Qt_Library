@@ -6,11 +6,11 @@
 #define FILE_LOG ".log"
 
 enum class Event_Type {
-  Default,
   Debug,
   Error,
   Warning,
-  Success
+  Success,
+  Default
 };
 
 enum class Mode_Login {
