@@ -3,6 +3,8 @@
 
 #include <QSocketNotifier>
 
+#include "define_default.hpp"
+
 class ObjectConsole : public QSocketNotifier {
   Q_OBJECT
 
@@ -16,7 +18,8 @@ private slots:
   void slotConsoleWrite(std::string);
 
 signals:
-  void signalConsoleIn(std::vector<std::string>);
+  void signalConsoleIn(std::string);
+  void signalEvent(Event_Type, std::string, std::string, std::string);
 };
 
 #endif // OBJECTCONSOLE_HPP
