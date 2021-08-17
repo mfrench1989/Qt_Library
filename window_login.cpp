@@ -1,4 +1,3 @@
-#include <QApplication>
 #include <QSettings>
 
 #include "CPPLibrary/function_string.hpp"
