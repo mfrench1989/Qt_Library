@@ -16,11 +16,21 @@ ObjectServer::ObjectServer(const std::string& address_in, const std::string& por
   QObject::connect(this, SIGNAL(newConnection()), this, SLOT(slotServerConnect()), Qt::QueuedConnection);
   QObject::connect(this, SIGNAL(signalEvent(Event_Type,std::string,std::string,std::string)),
                    parent, SIGNAL(signalEvent(Event_Type,std::string,std::string,std::string)), Qt::DirectConnection);
+
+  QObject::connect(this, SIGNAL(signalCommand(bool)), this, SLOT(slotServerCommand(bool)), Qt::QueuedConnection);
 }
 
 /*================================================================*/
 /*Public Methods*/
 /*================================================================*/
+void ObjectServer::serverWrite(const std::vector<char>& bytes_out) {
+  bool flag_empty = Vector_Command.empty();
+  Vector_Command.push_back({Command_Type::Write, bytes_out});
+  if (flag_empty) {
+      Q_EMIT signalCommand(false);
+    }
+}
+
 bool ObjectServer::serverListen() {
   QHostAddress server_address = Server_Address.empty() ? QHostAddress::Any : QHostAddress(QString::fromStdString(Server_Address));
   if (this->listen(server_address, quint16(stringToNum(Server_Port)))) {
@@ -100,12 +110,4 @@ void ObjectServer::slotServerRead() {
     }
   QByteArray bytes_in = Server_Socket->readAll();
   Q_EMIT signalServerIn(std::vector<char>(bytes_in.begin(), bytes_in.end()));
-}
-
-void ObjectServer::slotServerWrite(std::vector<char> bytes_out) {
-  bool flag_empty = Vector_Command.empty();
-  Vector_Command.push_back({Command_Type::Write, bytes_out});
-  if (flag_empty) {
-      Q_EMIT signalCommand(false);
-    }
 }

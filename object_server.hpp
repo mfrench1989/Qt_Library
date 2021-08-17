@@ -11,6 +11,7 @@ class ObjectServer : public QTcpServer {
 
 public:
   explicit ObjectServer(const std::string&, const std::string&, QObject*);
+  void serverWrite(const std::vector<char>&);
   bool serverListen();
 
 private:
@@ -36,7 +37,6 @@ private slots:
   void slotServerConnect();
   void slotServerDisconnect();
   void slotServerQuit();
-  void slotServerWrite(std::vector<char>);
 
 signals:
   void signalCommand(bool);
