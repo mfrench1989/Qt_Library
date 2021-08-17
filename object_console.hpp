@@ -10,12 +10,12 @@ class ObjectConsole : public QSocketNotifier {
 
 public:
   explicit ObjectConsole(QObject* = nullptr);
+  void consoleWrite(const std::string&);
 
 private:
 
 private slots:
   void slotConsoleRead();
-  void slotConsoleWrite(std::string);
 
 signals:
   void signalConsoleIn(std::string);
