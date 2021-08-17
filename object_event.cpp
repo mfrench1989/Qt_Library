@@ -1,4 +1,4 @@
-#include <QApplication>
+#include <QCoreApplication>
 
 #include "CPPLibrary/function_file.hpp"
 #include "CPPLibrary/function_string.hpp"
