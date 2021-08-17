@@ -22,7 +22,6 @@ private slots:
 
 signals:
   void signalMessage(std::string);
-
 };
 
 #endif // OBJECTEVENT_HPP
