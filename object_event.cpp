@@ -16,8 +16,7 @@ ObjectEvent::ObjectEvent(QObject *parent) : QObject(parent) {
 /*================================================================*/
 void ObjectEvent::initConnect(const std::vector<QObject*> vector_connect) {
   for (const QObject* object_connect : vector_connect) {
-      QObject::connect(this, SIGNAL(signalMessage(std::string)),
-                       object_connect, SLOT(slotMessage(std::string)), Qt::QueuedConnection);
+      QObject::connect(this, SIGNAL(signalMessage(std::string)), object_connect, SLOT(slotMessage(std::string)), Qt::QueuedConnection);
     }
 }
 

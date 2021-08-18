@@ -37,11 +37,9 @@ void WindowLogin::initConnect(const QObject* object_event, const std::vector<QOb
                        object_event, SLOT(slotEvent(Event_Type,std::string,std::string,std::string)), Qt::QueuedConnection);
     }
 
-  QObject::connect(this, SIGNAL(signalModeLogin(Mode_Login)),
-                   this, SLOT(slotModeLogin(Mode_Login)), Qt::QueuedConnection);
+  QObject::connect(this, SIGNAL(signalModeLogin(Mode_Login)), this, SLOT(slotModeLogin(Mode_Login)), Qt::QueuedConnection);
   for (const QObject* object_connect : vector_object) {
-      QObject::connect(this, SIGNAL(signalModeLogin(Mode_Login)),
-                       object_connect, SLOT(slotModeLogin(Mode_Login)), Qt::QueuedConnection);
+      QObject::connect(this, SIGNAL(signalModeLogin(Mode_Login)), object_connect, SLOT(slotModeLogin(Mode_Login)), Qt::QueuedConnection);
     }
 }
 
