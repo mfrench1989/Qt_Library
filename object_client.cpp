@@ -7,7 +7,6 @@
 
 ObjectClient::ObjectClient(const std::string& address_in, const std::string& port_in, QObject *parent) : QTcpSocket(parent) {
   this->setObjectName((parent ? this->parent()->objectName() + "_" : "") + "Client");
-  qRegisterMetaType<QAbstractSocket::SocketState>("QAbstractSocket::SocketState");
 
   Client_Address = address_in;
   Client_Port = port_in;
@@ -20,8 +19,8 @@ ObjectClient::ObjectClient(const std::string& address_in, const std::string& por
   QObject::connect(this, SIGNAL(signalEvent(Event_Type,std::string,std::string,std::string)),
                    parent, SIGNAL(signalEvent(Event_Type,std::string,std::string,std::string)), Qt::DirectConnection);
 
-  QObject::connect(this, SIGNAL(stateChanged(QAbstractSocket::SocketState)),
-                   this, SLOT(slotClientChangeState(QAbstractSocket::SocketState)), Qt::QueuedConnection);
+  QObject::connect(this, SIGNAL(connected()), this, SLOT(slotClientConnect()), Qt::QueuedConnection);
+  QObject::connect(this, SIGNAL(disconnected()), this, SLOT(slotClientDisconnect()), Qt::QueuedConnection);
   QObject::connect(this, SIGNAL(signalCommand(bool)), this, SLOT(slotClientCommand(bool)), Qt::QueuedConnection);
   QObject::connect(Time_Out, SIGNAL(timeout()), this, SLOT(slotClientTimeout()), Qt::QueuedConnection);
 }
@@ -45,7 +44,6 @@ void ObjectClient::clientDisconnect() {
 
 void ObjectClient::clientWrite(const std::vector<char>& bytes_out) {
   bool flag_empty = Vector_Command.empty();
-  Vector_Command.push_back({Command_Type::Connect, std::vector<char>()});
   Vector_Command.push_back({Command_Type::Write, bytes_out});
   if (flag_empty) {
       Q_EMIT signalCommand(false);
@@ -65,52 +63,6 @@ void ObjectClient::clientError(const std::string& function_in, const std::string
 /*================================================================*/
 /*Private Slots*/
 /*================================================================*/
-void ObjectClient::slotClientChangeState(QAbstractSocket::SocketState state_in) {
-  switch (state_in) {
-    case QAbstractSocket::UnconnectedState: {
-        if (Vector_Command.empty()) {
-            Q_EMIT signalEvent(Event_Type::Warning, this->objectName().toStdString(), stringFuncInfo(this, __func__), "Server disconnected");
-          }
-        else if (Vector_Command.front().Type == Command_Type::Disconnect) {
-            Time_Out->stop();
-            Q_EMIT signalEvent(Event_Type::Debug, this->objectName().toStdString(), stringFuncInfo(this, __func__), "Client disconnected");
-            Q_EMIT signalCommand(true);
-          }
-        else if (Vector_Command.front().Type == Command_Type::Connect) {
-            /*Do Nothing*/
-          }
-        else {
-            clientError(stringFuncInfo(this, __func__), "Server disconnected");
-          }
-        break;
-      }
-    case QAbstractSocket::ConnectingState: {
-        if (!Vector_Command.empty() && Vector_Command.front().Type == Command_Type::Connect) {
-            Time_Out->start(WAIT_TIME);
-          }
-        break;
-      }
-    case QAbstractSocket::ConnectedState: {
-        if (!Vector_Command.empty() && Vector_Command.front().Type == Command_Type::Connect) {
-            Time_Out->stop();
-            Q_EMIT signalEvent(Event_Type::Debug, this->objectName().toStdString(), stringFuncInfo(this, __func__),
-                               "Client connected - " + Client_Address + ":" + Client_Port);
-            Q_EMIT signalCommand(true);
-          }
-        break;
-      }
-    case QAbstractSocket::ClosingState: {
-        if (!Vector_Command.empty() && Vector_Command.front().Type == Command_Type::Disconnect) {
-            Time_Out->start(WAIT_TIME);
-          }
-        break;
-      }
-    default: {
-        break;
-      }
-    }
-}
-
 void ObjectClient::slotClientCommand(bool flag_erase) {
   if (!Vector_Command.empty() && flag_erase) {
       Vector_Command.erase(Vector_Command.begin());
@@ -123,33 +75,67 @@ void ObjectClient::slotClientCommand(bool flag_erase) {
 
   switch (Vector_Command.front().Type) {
     case Command_Type::Disconnect: {
-        if (this->state() != QAbstractSocket::UnconnectedState && this->state() != QAbstractSocket::ClosingState) {
-            this->disconnectFromHost();
+        /*Dont disconnect if already disconnect(ed/ing)*/
+        if (this->state() == QAbstractSocket::UnconnectedState || this->state() == QAbstractSocket::ClosingState) {
+            Q_EMIT signalCommand(true);
           }
         else {
-            Q_EMIT signalCommand(true);
+            Time_Out->start(WAIT_TIME);
+            this->disconnectFromHost();
           }
         break;
       }
     case Command_Type::Connect: {
-        if (this->state() != QAbstractSocket::HostLookupState &&
-            this->state() != QAbstractSocket::ConnectingState &&
-            this->state() != QAbstractSocket::ConnectedState) {
-            this->connectToHost(QHostAddress(QString::fromStdString(Client_Address)), quint16(stringToNum(Client_Port)));
+        /*Dont connect if already connect(ed/ing)*/
+        if (this->state() == QAbstractSocket::ConnectedState ||
+            this->state() == QAbstractSocket::ConnectingState ||
+            this->state() == QAbstractSocket::HostLookupState) {
+            Q_EMIT signalCommand(true);
           }
         else {
-            Q_EMIT signalCommand(true);
+            Time_Out->start(WAIT_TIME);
+            this->connectToHost(QHostAddress(QString::fromStdString(Client_Address)), quint16(stringToNum(Client_Port)));
           }
         break;
       }
     case Command_Type::Write: {
-        char bytes_out[Vector_Command.front().Data.size()];
-        std::copy(Vector_Command.front().Data.begin(), Vector_Command.front().Data.end(), bytes_out);
-        this->write(bytes_out, sizeof(bytes_out));
-        this->flush();
-        Q_EMIT signalCommand(true);
+        /*Check connection before writing & connect if needed*/
+        if (this->state() == QAbstractSocket::ConnectedState ||
+            this->state() == QAbstractSocket::ConnectingState ||
+            this->state() == QAbstractSocket::HostLookupState) {
+            char bytes_out[Vector_Command.front().Data.size()];
+            std::copy(Vector_Command.front().Data.begin(), Vector_Command.front().Data.end(), bytes_out);
+            this->write(bytes_out, sizeof(bytes_out));
+            this->flush();
+            Q_EMIT signalCommand(true);
+          }
+        else {
+            Vector_Command.insert(Vector_Command.begin(), {Command_Type::Connect, std::vector<char>()});
+            Q_EMIT signalCommand(false);
+          }
         break;
       }
+    }
+}
+
+void ObjectClient::slotClientConnect() {
+  if (!Vector_Command.empty() && Vector_Command.front().Type == Command_Type::Connect) {
+      Time_Out->stop();
+      Q_EMIT signalCommand(true);
+    }
+}
+
+void ObjectClient::slotClientDisconnect() {
+  /*Emit warning for display if server disconnected from client*/
+  if (Vector_Command.empty()) {
+      Q_EMIT signalEvent(Event_Type::Warning, this->objectName().toStdString(), stringFuncInfo(this, __func__), "Server disconnected");
+    }
+  else if (Vector_Command.front().Type == Command_Type::Disconnect) {
+      Time_Out->stop();
+      Q_EMIT signalCommand(true);
+    }
+  else {
+      clientError(stringFuncInfo(this, __func__), "Server disconnected");
     }
 }
 

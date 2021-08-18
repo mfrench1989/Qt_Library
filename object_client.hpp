@@ -36,10 +36,11 @@ private:
   void clientError(const std::string&, const std::string&);
 
 private slots:
-  void slotClientRead();
-  void slotClientChangeState(QAbstractSocket::SocketState);
   void slotClientCommand(bool);
+  void slotClientConnect();
+  void slotClientDisconnect();
   void slotClientQuit();
+  void slotClientRead();
   void slotClientTimeout();
 
 signals:
