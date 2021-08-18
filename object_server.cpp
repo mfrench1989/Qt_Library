@@ -70,17 +70,18 @@ void ObjectServer::slotServerCommand(bool flag_erase) {
 
   switch (Vector_Command.front().Type) {
     case Command_Type::Write: {
-        if (Server_Socket->state() != QAbstractSocket::HostLookupState &&
-            Server_Socket->state() != QAbstractSocket::ConnectingState &&
-            Server_Socket->state() != QAbstractSocket::ConnectedState) {
-            serverError(stringFuncInfo(this, __func__), "Socket cannot write - not connected");
-          }
-        else {
+        /*Check connection before writing*/
+        if (Server_Socket->state() == QAbstractSocket::ConnectedState ||
+            Server_Socket->state() == QAbstractSocket::ConnectingState ||
+            Server_Socket->state() == QAbstractSocket::HostLookupState) {
             char bytes_out[Vector_Command.front().Data.size()];
             std::copy(Vector_Command.front().Data.begin(), Vector_Command.front().Data.end(), bytes_out);
             Server_Socket->write(bytes_out, sizeof(bytes_out));
             Server_Socket->flush();
             Q_EMIT signalCommand(true);
+          }
+        else {
+            serverError(stringFuncInfo(this, __func__), "Socket cannot write - not connected");
           }
         break;
       }
@@ -100,8 +101,8 @@ void ObjectServer::slotServerDisconnect() {
 }
 
 void ObjectServer::slotServerQuit() {
-  this->close();
   Server_Socket->close();
+  this->close();
 }
 
 void ObjectServer::slotServerRead() {
