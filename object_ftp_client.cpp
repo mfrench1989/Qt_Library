@@ -40,6 +40,7 @@ void ObjectFTPClient::clientWrite(const std::string& file_path, const std::vecto
 /*================================================================*/
 void ObjectFTPClient::clientError(const std::string& function_in, const std::string& error_in) {
   Flag_Error = true;
+  FTP_Reply->deleteLater();
   Vector_Command.clear();
   Q_EMIT signalEvent(Event_Type::Error, this->objectName().toStdString(), function_in, error_in);
   Q_EMIT signalClientCommand(false);
@@ -82,6 +83,23 @@ void ObjectFTPClient::slotClientCommand(bool flag_erase) {
                    this, SLOT(slotFTPError(QNetworkReply::NetworkError)), Qt::QueuedConnection);
 }
 
+void ObjectFTPClient::slotClientQuit() {
+  FTP_Reply->close();
+}
+
+void ObjectFTPClient::slotClientTimeout() {
+  switch (Vector_Command.front().Type) {
+    case Command_Type::Read: {
+        clientError(stringFuncInfo(this, __func__), "Client read timeout");
+        break;
+      }
+    case Command_Type::Write: {
+        clientError(stringFuncInfo(this, __func__), "Client write timeout");
+        break;
+      }
+    }
+}
+
 void ObjectFTPClient::slotFTPError(QNetworkReply::NetworkError error_in) {
   clientError(stringFuncInfo(this, __func__), "FTP error code " + std::to_string(static_cast<int>(error_in)));
 }
@@ -91,17 +109,19 @@ void ObjectFTPClient::slotFTPFinish() {
   switch (FTP_Reply->operation()) {
     case QNetworkAccessManager::GetOperation: {
         QByteArray bytes_in = FTP_Reply->readAll();
+        FTP_Reply->deleteLater();
         Q_EMIT signalClientIn(std::vector<char>(bytes_in.begin(), bytes_in.end()));
         Q_EMIT signalClientCommand(true);
         break;
       }
     case QNetworkAccessManager::PutOperation: {
+        FTP_Reply->deleteLater();
         Q_EMIT signalClientCommand(true);
         break;
       }
     default: {
         clientError(stringFuncInfo(this, __func__),
-                    "FTP unhandled reply operation " + std::to_string(static_cast<int>(FTP_Reply->operation())));
+                    "FTP unhandled operation " + std::to_string(static_cast<int>(FTP_Reply->operation())));
         break;
       }
     }
