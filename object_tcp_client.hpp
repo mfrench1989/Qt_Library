@@ -24,7 +24,7 @@ private:
   };
   struct Command_Info {
     Command_Type Type;
-    std::vector<char> Data;
+    std::vector<char> Bytes;
   };
 
   bool Flag_Error = false;
@@ -44,10 +44,10 @@ private slots:
   void slotClientTimeout();
 
 signals:
-  void signalCommand(bool);
-  void signalEvent(Event_Type, std::string, std::string, std::string);
-  void signalClientComplete(bool);
   void signalClientIn(std::vector<char>);
+  void signalClientCommand(bool);
+  void signalClientComplete(bool);
+  void signalEvent(Event_Type, std::string, std::string, std::string);
 };
 
 #endif // OBJECTTCPCLIENT_HPP

@@ -20,7 +20,7 @@ private:
   };
   struct Command_Info {
     Command_Type Type;
-    std::vector<char> Data;
+    std::vector<char> Bytes;
   };
 
   bool Flag_Error = false;
@@ -39,10 +39,10 @@ private slots:
   void slotServerQuit();
 
 signals:
-  void signalCommand(bool);
   void signalEvent(Event_Type, std::string, std::string, std::string);
-  void signalServerComplete(bool);
   void signalServerIn(std::vector<char>);
+  void signalServerCommand(bool);
+  void signalServerComplete(bool);
 };
 
 #endif // OBJECTTCPSERVER_HPP

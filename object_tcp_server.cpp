@@ -5,7 +5,7 @@
 #include "object_tcp_server.hpp"
 
 ObjectTCPServer::ObjectTCPServer(const std::string& address_in, const std::string& port_in, QObject *parent) : QTcpServer(parent) {
-  this->setObjectName((parent ? this->parent()->objectName() + "_" : "") + "Server");
+  this->setObjectName((parent ? this->parent()->objectName() + "_" : "") + "TCPServer");
 
   Server_Address = address_in;
   Server_Port = port_in;
@@ -17,7 +17,7 @@ ObjectTCPServer::ObjectTCPServer(const std::string& address_in, const std::strin
   QObject::connect(this, SIGNAL(signalEvent(Event_Type,std::string,std::string,std::string)),
                    parent, SIGNAL(signalEvent(Event_Type,std::string,std::string,std::string)), Qt::DirectConnection);
 
-  QObject::connect(this, SIGNAL(signalCommand(bool)), this, SLOT(slotServerCommand(bool)), Qt::QueuedConnection);
+  QObject::connect(this, SIGNAL(signalServerCommand(bool)), this, SLOT(slotServerCommand(bool)), Qt::QueuedConnection);
 }
 
 /*================================================================*/
@@ -27,7 +27,7 @@ void ObjectTCPServer::serverWrite(const std::vector<char>& bytes_out) {
   bool flag_empty = Vector_Command.empty();
   Vector_Command.push_back({Command_Type::Write, bytes_out});
   if (flag_empty) {
-      Q_EMIT signalCommand(false);
+      Q_EMIT signalServerCommand(false);
     }
 }
 
@@ -52,7 +52,7 @@ void ObjectTCPServer::serverError(const std::string& function_in, const std::str
   Flag_Error = true;
   Vector_Command.clear();
   Q_EMIT signalEvent(Event_Type::Error, this->objectName().toStdString(), function_in, error_in);
-  Q_EMIT signalCommand(false);
+  Q_EMIT signalServerCommand(false);
 }
 
 /*================================================================*/
@@ -74,11 +74,11 @@ void ObjectTCPServer::slotServerCommand(bool flag_erase) {
         if (Server_Socket->state() == QAbstractSocket::ConnectedState ||
             Server_Socket->state() == QAbstractSocket::ConnectingState ||
             Server_Socket->state() == QAbstractSocket::HostLookupState) {
-            char bytes_out[Vector_Command.front().Data.size()];
-            std::copy(Vector_Command.front().Data.begin(), Vector_Command.front().Data.end(), bytes_out);
+            char bytes_out[Vector_Command.front().Bytes.size()];
+            std::copy(Vector_Command.front().Bytes.begin(), Vector_Command.front().Bytes.end(), bytes_out);
             Server_Socket->write(bytes_out, sizeof(bytes_out));
             Server_Socket->flush();
-            Q_EMIT signalCommand(true);
+            Q_EMIT signalServerCommand(true);
           }
         else {
             serverError(stringFuncInfo(this, __func__), "Socket cannot write - not connected");
