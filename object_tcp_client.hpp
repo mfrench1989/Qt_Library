@@ -1,16 +1,16 @@
-#ifndef OBJECTCLIENT_HPP
-#define OBJECTCLIENT_HPP
+#ifndef OBJECTTCPCLIENT_HPP
+#define OBJECTTCPCLIENT_HPP
 
 #include <QTcpSocket>
 #include <QTimer>
 
 #include "define_default.hpp"
 
-class ObjectClient : public QTcpSocket {
+class ObjectTCPClient : public QTcpSocket {
   Q_OBJECT
 
 public:
-  explicit ObjectClient(const std::string&, const std::string&, QObject* = nullptr);
+  explicit ObjectTCPClient(const std::string&, const std::string&, QObject* = nullptr);
   void clientConnect();
   void clientDisconnect();
   void clientWrite(const std::vector<char>&);
@@ -50,4 +50,4 @@ signals:
   void signalClientIn(std::vector<char>);
 };
 
-#endif // OBJECTCLIENT_HPP
+#endif // OBJECTTCPCLIENT_HPP

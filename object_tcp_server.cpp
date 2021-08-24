@@ -2,9 +2,9 @@
 
 #include "CPPLibrary/function_string.hpp"
 
-#include "object_server.hpp"
+#include "object_tcp_server.hpp"
 
-ObjectServer::ObjectServer(const std::string& address_in, const std::string& port_in, QObject *parent) : QTcpServer(parent) {
+ObjectTCPServer::ObjectTCPServer(const std::string& address_in, const std::string& port_in, QObject *parent) : QTcpServer(parent) {
   this->setObjectName((parent ? this->parent()->objectName() + "_" : "") + "Server");
 
   Server_Address = address_in;
@@ -23,7 +23,7 @@ ObjectServer::ObjectServer(const std::string& address_in, const std::string& por
 /*================================================================*/
 /*Public Methods*/
 /*================================================================*/
-void ObjectServer::serverWrite(const std::vector<char>& bytes_out) {
+void ObjectTCPServer::serverWrite(const std::vector<char>& bytes_out) {
   bool flag_empty = Vector_Command.empty();
   Vector_Command.push_back({Command_Type::Write, bytes_out});
   if (flag_empty) {
@@ -31,7 +31,7 @@ void ObjectServer::serverWrite(const std::vector<char>& bytes_out) {
     }
 }
 
-bool ObjectServer::serverListen() {
+bool ObjectTCPServer::serverListen() {
   QHostAddress server_address = Server_Address.empty() ? QHostAddress::Any : QHostAddress(QString::fromStdString(Server_Address));
   if (this->listen(server_address, quint16(stringToNum(Server_Port)))) {
       Q_EMIT signalEvent(Event_Type::Default, this->objectName().toStdString(), stringFuncInfo(this, __func__),
@@ -48,7 +48,7 @@ bool ObjectServer::serverListen() {
 /*================================================================*/
 /*Private Methods*/
 /*================================================================*/
-void ObjectServer::serverError(const std::string& function_in, const std::string& error_in) {
+void ObjectTCPServer::serverError(const std::string& function_in, const std::string& error_in) {
   Flag_Error = true;
   Vector_Command.clear();
   Q_EMIT signalEvent(Event_Type::Error, this->objectName().toStdString(), function_in, error_in);
@@ -58,7 +58,7 @@ void ObjectServer::serverError(const std::string& function_in, const std::string
 /*================================================================*/
 /*Private Slots*/
 /*================================================================*/
-void ObjectServer::slotServerCommand(bool flag_erase) {
+void ObjectTCPServer::slotServerCommand(bool flag_erase) {
   if (!Vector_Command.empty() && flag_erase) {
       Vector_Command.erase(Vector_Command.begin());
     }
@@ -88,7 +88,7 @@ void ObjectServer::slotServerCommand(bool flag_erase) {
     }
 }
 
-void ObjectServer::slotServerConnect() {
+void ObjectTCPServer::slotServerConnect() {
   Server_Socket->close();
   Server_Socket = this->nextPendingConnection();
   QObject::connect(Server_Socket, SIGNAL(readyRead()), this, SLOT(slotServerRead()), Qt::DirectConnection);
@@ -96,16 +96,16 @@ void ObjectServer::slotServerConnect() {
   slotServerRead();
 }
 
-void ObjectServer::slotServerDisconnect() {
+void ObjectTCPServer::slotServerDisconnect() {
   Server_Socket->close();
 }
 
-void ObjectServer::slotServerQuit() {
+void ObjectTCPServer::slotServerQuit() {
   Server_Socket->close();
   this->close();
 }
 
-void ObjectServer::slotServerRead() {
+void ObjectTCPServer::slotServerRead() {
   if (!Server_Socket->bytesAvailable()) {
       return;
     }

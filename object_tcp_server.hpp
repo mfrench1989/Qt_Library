@@ -1,16 +1,16 @@
-#ifndef OBJECTSERVER_HPP
-#define OBJECTSERVER_HPP
+#ifndef OBJECTTCPSERVER_HPP
+#define OBJECTTCPSERVER_HPP
 
 #include <QTcpServer>
 #include <QTcpSocket>
 
 #include "define_default.hpp"
 
-class ObjectServer : public QTcpServer {
+class ObjectTCPServer : public QTcpServer {
   Q_OBJECT
 
 public:
-  explicit ObjectServer(const std::string&, const std::string&, QObject*);
+  explicit ObjectTCPServer(const std::string&, const std::string&, QObject*);
   void serverWrite(const std::vector<char>&);
   bool serverListen();
 
@@ -45,4 +45,4 @@ signals:
   void signalServerIn(std::vector<char>);
 };
 
-#endif // OBJECTSERVER_HPP
+#endif // OBJECTTCPSERVER_HPP

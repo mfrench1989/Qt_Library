@@ -3,9 +3,9 @@
 
 #include "CPPLibrary/function_string.hpp"
 
-#include "object_client.hpp"
+#include "object_tcp_client.hpp"
 
-ObjectClient::ObjectClient(const std::string& address_in, const std::string& port_in, QObject *parent) : QTcpSocket(parent) {
+ObjectTCPClient::ObjectTCPClient(const std::string& address_in, const std::string& port_in, QObject *parent) : QTcpSocket(parent) {
   this->setObjectName((parent ? this->parent()->objectName() + "_" : "") + "Client");
 
   Client_Address = address_in;
@@ -28,21 +28,21 @@ ObjectClient::ObjectClient(const std::string& address_in, const std::string& por
 /*================================================================*/
 /*Public Methods*/
 /*================================================================*/
-void ObjectClient::clientConnect() {
+void ObjectTCPClient::clientConnect() {
   /*If function is called assume force connect and clear Vector_Command*/
   Vector_Command.clear();
   Vector_Command.push_back({Command_Type::Connect, std::vector<char>()});
   Q_EMIT signalCommand(false);
 }
 
-void ObjectClient::clientDisconnect() {
+void ObjectTCPClient::clientDisconnect() {
   /*If function is called assume force disconnect and clear Vector_Command*/
   Vector_Command.clear();
   Vector_Command.push_back({Command_Type::Disconnect, std::vector<char>()});
   Q_EMIT signalCommand(false);
 }
 
-void ObjectClient::clientWrite(const std::vector<char>& bytes_out) {
+void ObjectTCPClient::clientWrite(const std::vector<char>& bytes_out) {
   bool flag_empty = Vector_Command.empty();
   Vector_Command.push_back({Command_Type::Write, bytes_out});
   if (flag_empty) {
@@ -53,7 +53,7 @@ void ObjectClient::clientWrite(const std::vector<char>& bytes_out) {
 /*================================================================*/
 /*Private Methods*/
 /*================================================================*/
-void ObjectClient::clientError(const std::string& function_in, const std::string& error_in) {
+void ObjectTCPClient::clientError(const std::string& function_in, const std::string& error_in) {
   Flag_Error = true;
   Vector_Command.clear();
   Q_EMIT signalEvent(Event_Type::Error, this->objectName().toStdString(), function_in, error_in);
@@ -63,7 +63,7 @@ void ObjectClient::clientError(const std::string& function_in, const std::string
 /*================================================================*/
 /*Private Slots*/
 /*================================================================*/
-void ObjectClient::slotClientCommand(bool flag_erase) {
+void ObjectTCPClient::slotClientCommand(bool flag_erase) {
   if (!Vector_Command.empty() && flag_erase) {
       Vector_Command.erase(Vector_Command.begin());
     }
@@ -118,14 +118,14 @@ void ObjectClient::slotClientCommand(bool flag_erase) {
     }
 }
 
-void ObjectClient::slotClientConnect() {
+void ObjectTCPClient::slotClientConnect() {
   if (!Vector_Command.empty() && Vector_Command.front().Type == Command_Type::Connect) {
       Time_Out->stop();
       Q_EMIT signalCommand(true);
     }
 }
 
-void ObjectClient::slotClientDisconnect() {
+void ObjectTCPClient::slotClientDisconnect() {
   /*Emit warning for display if server disconnected from client*/
   if (Vector_Command.empty()) {
       Q_EMIT signalEvent(Event_Type::Warning, this->objectName().toStdString(), stringFuncInfo(this, __func__), "Server disconnected");
@@ -139,17 +139,17 @@ void ObjectClient::slotClientDisconnect() {
     }
 }
 
-void ObjectClient::slotClientQuit() {
+void ObjectTCPClient::slotClientQuit() {
   Vector_Command.clear();
   this->disconnectFromHost();
 }
 
-void ObjectClient::slotClientRead() {
+void ObjectTCPClient::slotClientRead() {
   QByteArray bytes_in = this->readAll();
   Q_EMIT signalClientIn(std::vector<char>(bytes_in.begin(), bytes_in.end()));
 }
 
-void ObjectClient::slotClientTimeout() {
+void ObjectTCPClient::slotClientTimeout() {
   switch (Vector_Command.front().Type) {
     case Command_Type::Disconnect: {
         clientError(stringFuncInfo(this, __func__), "Client disconnect timeout - forcing disconnect");
