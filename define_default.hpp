@@ -5,6 +5,8 @@
 
 #define FILE_LOG ".log"
 
+#define PORT_MAX 65535
+
 enum class Event_Type {
   Debug,
   Error,
