@@ -71,8 +71,8 @@ void WindowLogin::slotModeLogin(Mode_Login mode_in) {
   /*Issue updated login/logout message if Flag_Login is changing*/
   if (Flag_Login != mode_in) {
       Q_EMIT signalEvent(Event_Type::Default, this->objectName().toStdString(), stringFuncInfo(this, __func__),
-                         mode_in == Mode_Login::None ? std::string(Flag_Login == Mode_Login::Admin ? "Admin" : "User") + "Logout" :
-                                                       std::string(mode_in == Mode_Login::Admin ? "Admin" : "User") + "Login");
+                         mode_in == Mode_Login::None ? std::string(Flag_Login == Mode_Login::Admin ? "Admin" : "User") + " Logout" :
+                                                       std::string(mode_in == Mode_Login::Admin ? "Admin" : "User") + " Login");
     }
 
   Flag_Login = mode_in;
