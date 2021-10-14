@@ -4,6 +4,12 @@
 
 #include "function_interface.hpp"
 
+void guiClearLineEdits(const QWidget& widget) {
+  for (QLineEdit* line_edit : widget.findChildren<QLineEdit*>()) {
+      line_edit->clear();
+    }
+}
+
 void guiFormatComboBox(QComboBox& combo_box) {
   combo_box.setStyleSheet(QString::fromStdString("QComboBox {background:" + stringColorHSL(HUE_BASE, SAT_BASE, 25) + ";" +
                                                 "color:" + stringColorHSL(HUE_BASE, SAT_GRAY, LUM_TEXT) + ";" +
@@ -249,12 +255,6 @@ void guiFormatWidget(QWidget& widget, const double hue, const double saturation,
 
                                               "QWidget::disabled {background:" + stringColorHSL(hue, saturation, luminosity + 10) + ";" +
                                               "color:" + stringColorHSL(HUE_BASE, SAT_GRAY, 50) + ";}"));
-}
-
-void guiClearLineEdits(const QWidget& widget) {
-  for (QLineEdit* line_edit : widget.findChildren<QLineEdit*>()) {
-      line_edit->clear();
-    }
 }
 
 void guiInitStyle(const QObject& object) {

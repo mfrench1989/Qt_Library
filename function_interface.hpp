@@ -35,6 +35,12 @@
 #define LUM_LIGHT 95
 
 /**
+ * @brief guiClearLineEdits - clear all line edits that are children of widget
+ * @param QWidget - widget to clear the child line edits of
+ */
+void guiClearLineEdits(const QWidget&);
+
+/**
  * @brief guiFormatComboBox - format stylesheet
  * @param QComboBox - ui element
  */
@@ -124,12 +130,6 @@ void guiFormatToolButton(QToolButton&);
  * @param double - luminosity
  */
 void guiFormatWidget(QWidget&, const double, const double, const double);
-
-/**
- * @brief guiClearLineEdits - clear all line edits that are children of widget
- * @param QWidget - widget to clear the child line edits of
- */
-void guiClearLineEdits(const QWidget&);
 
 /**
  * @brief guiInitStyle - initialize stylesheet for passed object
