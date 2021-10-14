@@ -9,7 +9,7 @@
 WindowLogin::WindowLogin(QWidget *parent) : QMainWindow(parent), ui(new Ui::WindowLogin) {
   ui->setupUi(this);
   this->setContextMenuPolicy(Qt::NoContextMenu);
-  this->setObjectName("WindowLogin");
+  this->setObjectName("Window_Login");
   qRegisterMetaType<Mode_Login>("Mode_Login");
 
   /*Load position on creation*/
