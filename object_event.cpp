@@ -7,7 +7,7 @@
 #include "object_event.hpp"
 
 ObjectEvent::ObjectEvent(QObject *parent) : QObject(parent) {
-  this->setObjectName("ObjectEvent");
+  this->setObjectName("Object_Event");
   qRegisterMetaType<Event_Type>("Event_Type");
 }
 
