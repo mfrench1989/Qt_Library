@@ -6,7 +6,7 @@
 #include "object_tcp_client.hpp"
 
 ObjectTCPClient::ObjectTCPClient(const std::string& address_in, const std::string& port_in, QObject *parent) : QTcpSocket(parent) {
-  this->setObjectName((parent ? this->parent()->objectName() + "_" : "") + "TCPClient");
+  this->setObjectName(this->parent()->objectName() + "_TCPClient");
 
   Client_Address = address_in;
   Client_Port = port_in;
@@ -15,14 +15,26 @@ ObjectTCPClient::ObjectTCPClient(const std::string& address_in, const std::strin
   Time_Out->setSingleShot(true);
 
   QObject::connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(slotClientQuit()), Qt::DirectConnection);
+  QObject::connect(this, SIGNAL(connected()), this, SLOT(slotClientConnect()), Qt::QueuedConnection);
+  QObject::connect(this, SIGNAL(disconnected()), this, SLOT(slotClientDisconnect()), Qt::QueuedConnection);
   QObject::connect(this, SIGNAL(readyRead()), this, SLOT(slotClientRead()), Qt::DirectConnection);
+  QObject::connect(Time_Out, SIGNAL(timeout()), this, SLOT(slotClientTimeout()), Qt::QueuedConnection);
+
+  /*signalClientIn*/
+  QObject::connect(this, SIGNAL(signalClientIn(std::vector<char>)),
+                   parent, SLOT(slotClientIn(std::vector<char>)), Qt::QueuedConnection);
+
+  /*signalClientCommand*/
+  QObject::connect(this, SIGNAL(signalClientCommand(bool)), this, SLOT(slotClientCommand(bool)), Qt::QueuedConnection);
+
+  /*signalClientComplete*/
+  QObject::connect(this, SIGNAL(signalClientComplete(bool)),
+                   parent, SLOT(slotClientComplete(bool)), Qt::QueuedConnection);
+
+  /*signalEvent*/
   QObject::connect(this, SIGNAL(signalEvent(Event_Type,std::string,std::string,std::string)),
                    parent, SIGNAL(signalEvent(Event_Type,std::string,std::string,std::string)), Qt::DirectConnection);
 
-  QObject::connect(this, SIGNAL(connected()), this, SLOT(slotClientConnect()), Qt::QueuedConnection);
-  QObject::connect(this, SIGNAL(disconnected()), this, SLOT(slotClientDisconnect()), Qt::QueuedConnection);
-  QObject::connect(this, SIGNAL(signalClientCommand(bool)), this, SLOT(slotClientCommand(bool)), Qt::QueuedConnection);
-  QObject::connect(Time_Out, SIGNAL(timeout()), this, SLOT(slotClientTimeout()), Qt::QueuedConnection);
 }
 
 /*================================================================*/
@@ -30,14 +42,14 @@ ObjectTCPClient::ObjectTCPClient(const std::string& address_in, const std::strin
 /*================================================================*/
 void ObjectTCPClient::clientConnect() {
   /*If function is called assume force connect and clear Vector_Command*/
-  Vector_Command.clear();
+  clearCommand();
   Vector_Command.push_back({Command_Type::Connect, std::vector<char>()});
   Q_EMIT signalClientCommand(false);
 }
 
 void ObjectTCPClient::clientDisconnect() {
   /*If function is called assume force disconnect and clear Vector_Command*/
-  Vector_Command.clear();
+  clearCommand();
   Vector_Command.push_back({Command_Type::Disconnect, std::vector<char>()});
   Q_EMIT signalClientCommand(false);
 }
@@ -53,9 +65,14 @@ void ObjectTCPClient::clientWrite(const std::vector<char>& bytes_out) {
 /*================================================================*/
 /*Private Methods*/
 /*================================================================*/
-void ObjectTCPClient::clientError(const std::string& function_in, const std::string& error_in) {
-  Flag_Error = true;
+void ObjectTCPClient::clearCommand() {
+  Time_Out->stop();
   Vector_Command.clear();
+}
+
+void ObjectTCPClient::clientError(const std::string& function_in, const std::string& error_in) {
+  clearCommand();
+  Flag_Error = true;
   Q_EMIT signalEvent(Event_Type::Error, this->objectName().toStdString(), function_in, error_in);
   Q_EMIT signalClientCommand(false);
 }
@@ -80,7 +97,7 @@ void ObjectTCPClient::slotClientCommand(bool flag_erase) {
             Q_EMIT signalClientCommand(true);
           }
         else {
-            Time_Out->start(WAIT_TIME);
+            Time_Out->start(WAIT_CLIENT);
             this->disconnectFromHost();
           }
         break;
@@ -93,7 +110,7 @@ void ObjectTCPClient::slotClientCommand(bool flag_erase) {
             Q_EMIT signalClientCommand(true);
           }
         else {
-            Time_Out->start(WAIT_TIME);
+            Time_Out->start(WAIT_CLIENT);
             this->connectToHost(QHostAddress(QString::fromStdString(Client_Address)), quint16(stringToNum(Client_Port)));
           }
         break;
@@ -140,7 +157,7 @@ void ObjectTCPClient::slotClientDisconnect() {
 }
 
 void ObjectTCPClient::slotClientQuit() {
-  Vector_Command.clear();
+  clearCommand();
   this->disconnectFromHost();
 }
 
@@ -158,6 +175,7 @@ void ObjectTCPClient::slotClientTimeout() {
       }
     case Command_Type::Connect: {
         clientError(stringFuncInfo(this, __func__), "Client connect timeout - " + Client_Address + ":" + Client_Port);
+        clientDisconnect();
         break;
       }
     case Command_Type::Write: {
@@ -165,5 +183,4 @@ void ObjectTCPClient::slotClientTimeout() {
         break;
       }
     }
-  Vector_Command.clear();
 }

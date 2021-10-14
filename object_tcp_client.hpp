@@ -10,13 +10,13 @@ class ObjectTCPClient : public QTcpSocket {
   Q_OBJECT
 
 public:
-  explicit ObjectTCPClient(const std::string&, const std::string&, QObject* = nullptr);
+  explicit ObjectTCPClient(const std::string&, const std::string&, QObject*);
   void clientConnect();
   void clientDisconnect();
   void clientWrite(const std::vector<char>&);
 
 private:
-#define WAIT_TIME 1000
+#define WAIT_CLIENT 1000
   enum class Command_Type {
     Disconnect,
     Connect,
@@ -33,6 +33,7 @@ private:
   QTimer* Time_Out;
   std::vector<Command_Info> Vector_Command;
 
+  void clearCommand();
   void clientError(const std::string&, const std::string&);
 
 private slots:

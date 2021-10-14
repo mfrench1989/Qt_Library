@@ -65,7 +65,7 @@ void ObjectFTPClient::slotClientCommand(bool flag_erase) {
   request.setPassword(QString::fromStdString(Client_Password));
 
   /*Start Time_Out and issue get/put command*/
-  Time_Out->start(WAIT_TIME);
+  Time_Out->start(WAIT_CLIENT);
   switch (Vector_Command.front().Type) {
     case Command_Type::Read: {
         FTP_Reply = this->get(QNetworkRequest(request));

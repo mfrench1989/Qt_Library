@@ -16,7 +16,7 @@ public:
   void clientWrite(const std::string&, const std::vector<char>&);
 
 private:
-#define WAIT_TIME 1000
+#define WAIT_CLIENT 1000
   enum class Command_Type {
     Read,
     Write
