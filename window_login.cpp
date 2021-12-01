@@ -31,26 +31,20 @@ WindowLogin::~WindowLogin() {
 /*================================================================*/
 /*Public Methods*/
 /*================================================================*/
-void WindowLogin::initConnect(const QObject* object_event, const std::vector<QObject*> vector_object) {
+bool WindowLogin::initConfig(const QObject* object_event, const std::vector<QObject*> vector_object) {
+  /*Stylesheet*/
+  guiFormatPushButton(*ui->pushButton_Logout, HUE_RED, SAT_COLOR);
+
   if (object_event) {
       QObject::connect(this, SIGNAL(signalEvent(Event_Type,std::string,std::string,std::string)),
                        object_event, SLOT(slotEvent(Event_Type,std::string,std::string,std::string)), Qt::QueuedConnection);
     }
 
-  QObject::connect(this, SIGNAL(signalModeLogin(Mode_Login)), this, SLOT(slotModeLogin(Mode_Login)), Qt::QueuedConnection);
+  QObject::connect(this, SIGNAL(signalModeLogin(Mode_Login)), this, SLOT(slotMode_Login(Mode_Login)), Qt::QueuedConnection);
   for (const QObject* object_connect : vector_object) {
-      QObject::connect(this, SIGNAL(signalModeLogin(Mode_Login)), object_connect, SLOT(slotModeLogin(Mode_Login)), Qt::QueuedConnection);
+      QObject::connect(this, SIGNAL(signalModeLogin(Mode_Login)), object_connect, SLOT(slotMode_Login(Mode_Login)), Qt::QueuedConnection);
     }
-}
 
-void WindowLogin::initStyle() {
-  guiFormatPushButton(*ui->pushButton_Logout, HUE_RED, SAT_COLOR);
-
-  Q_EMIT signalEvent(Event_Type::Default, this->objectName().toStdString(), stringFuncInfo(this, __func__),
-                     this->objectName().toStdString() + " stylesheet finished");
-}
-
-bool WindowLogin::initConfig() {
   Q_EMIT signalModeLogin(Mode_Login::None);
   Q_EMIT signalEvent(Event_Type::Default, this->objectName().toStdString(), stringFuncInfo(this, __func__),
                      this->objectName().toStdString() + " configuration finished");
@@ -67,7 +61,7 @@ void WindowLogin::closeEvent(QCloseEvent*) {
 /*================================================================*/
 /*Private Slots*/
 /*================================================================*/
-void WindowLogin::slotModeLogin(Mode_Login mode_in) {
+void WindowLogin::slotMode_Login(Mode_Login mode_in) {
   /*Issue updated login/logout message if Flag_Login is changing*/
   if (Flag_Login != mode_in) {
       Q_EMIT signalEvent(Event_Type::Default, this->objectName().toStdString(), stringFuncInfo(this, __func__),

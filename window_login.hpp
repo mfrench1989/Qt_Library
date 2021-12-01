@@ -15,9 +15,7 @@ class WindowLogin : public QMainWindow {
 public:
   explicit WindowLogin(QWidget* = nullptr);
   ~WindowLogin();
-  void initConnect(const QObject*, const std::vector<QObject*>);
-  void initStyle();
-  bool initConfig();
+  bool initConfig(const QObject*, const std::vector<QObject*>);
 
 private:
   Ui::WindowLogin *ui;
@@ -30,7 +28,7 @@ private:
   void closeEvent(QCloseEvent*);
 
 private slots:
-  void slotModeLogin(Mode_Login);
+  void slotMode_Login(Mode_Login);
   /*----------------------------------------------------------------*/
   /*UI Slots*/
   /*----------------------------------------------------------------*/
