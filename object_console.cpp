@@ -9,8 +9,6 @@ ObjectConsole::ObjectConsole(QObject* parent) : QSocketNotifier(STDIN_FILENO, QS
   this->setObjectName((parent ? this->parent()->objectName() + "_" : "") + "Console");
 
   QObject::connect(this, SIGNAL(activated(int)), this, SLOT(slotConsoleRead()), Qt::DirectConnection);
-  QObject::connect(this, SIGNAL(signalEvent(Event_Type,std::string,std::string,std::string)),
-                   parent, SIGNAL(signalEvent(Event_Type,std::string,std::string,std::string)), Qt::DirectConnection);
 }
 
 /*================================================================*/

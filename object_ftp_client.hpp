@@ -11,12 +11,13 @@ class ObjectFTPClient : public QNetworkAccessManager {
   Q_OBJECT
 
 public:
-  explicit ObjectFTPClient(const std::string&, const std::string&, const std::string&, QObject* = nullptr);
-//  void clientRead(const std::vector<char>&);
+  explicit ObjectFTPClient(const std::string&, const std::string&, const std::string&, QObject*);
+  void clientAbort();
+  void clientRead(const std::string&);
   void clientWrite(const std::string&, const std::vector<char>&);
 
 private:
-#define WAIT_CLIENT 1000
+#define WAIT_CLIENT 500
   enum class Command_Type {
     Read,
     Write
@@ -47,8 +48,8 @@ private slots:
 signals:
   void signalClientCommand(bool);
   void signalClientComplete(bool);
-  void signalEvent(Event_Type, std::string, std::string, std::string);
   void signalClientIn(std::vector<char>);
+  void signalEvent(Event_Type, std::string, std::string, std::string);
 };
 
 #endif // OBJECTFTPCLIENT_HPP

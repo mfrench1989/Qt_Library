@@ -7,26 +7,41 @@
 
 ObjectFTPClient::ObjectFTPClient(const std::string& address_in, const std::string& username_in,
                                  const std::string& password_in, QObject* parent) : QNetworkAccessManager(parent) {
-  this->setObjectName((parent ? this->parent()->objectName() + "_" : "") + "FTPClient");
+  this->setObjectName(this->parent()->objectName() + "_Client");
 
   Client_Address = address_in;
   Client_Username = username_in;
   Client_Password = password_in;
 
+  FTP_Reply = nullptr;
   Time_Out = new QTimer(this);
   Time_Out->setSingleShot(true);
 
   QObject::connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(slotClientQuit()), Qt::DirectConnection);
-  QObject::connect(this, SIGNAL(signalEvent(Event_Type,std::string,std::string,std::string)),
-                   parent, SIGNAL(signalEvent(Event_Type,std::string,std::string,std::string)), Qt::DirectConnection);
-
-  QObject::connect(this, SIGNAL(signalCommand(bool)), this, SLOT(slotClientCommand(bool)), Qt::QueuedConnection);
+  QObject::connect(this, SIGNAL(signalClientCommand(bool)), this, SLOT(slotClientCommand(bool)), Qt::QueuedConnection);
   QObject::connect(Time_Out, SIGNAL(timeout()), this, SLOT(slotClientTimeout()), Qt::QueuedConnection);
 }
 
 /*================================================================*/
 /*Public Methods*/
 /*================================================================*/
+void ObjectFTPClient::clientAbort() {
+  Time_Out->stop();
+  Vector_Command.clear();
+  Flag_Error = false;
+  if (FTP_Reply != nullptr) {
+      FTP_Reply->abort();
+    }
+}
+
+void ObjectFTPClient::clientRead(const std::string& file_path) {
+  bool flag_empty = Vector_Command.empty();
+  Vector_Command.push_back({Command_Type::Read, "ftp://" + Client_Address + "/" + file_path, std::vector<char>()});
+  if (flag_empty) {
+      Q_EMIT signalClientCommand(false);
+    }
+}
+
 void ObjectFTPClient::clientWrite(const std::string& file_path, const std::vector<char>& bytes_out) {
   bool flag_empty = Vector_Command.empty();
   Vector_Command.push_back({Command_Type::Write, "ftp://" + Client_Address + "/" + file_path, bytes_out});
@@ -39,11 +54,10 @@ void ObjectFTPClient::clientWrite(const std::string& file_path, const std::vecto
 /*Private Methods*/
 /*================================================================*/
 void ObjectFTPClient::clientError(const std::string& function_in, const std::string& error_in) {
+  clientAbort();
   Flag_Error = true;
-  FTP_Reply->deleteLater();
-  Vector_Command.clear();
   Q_EMIT signalEvent(Event_Type::Error, this->objectName().toStdString(), function_in, error_in);
-  Q_EMIT signalClientCommand(false);
+  Q_EMIT signalClientCommand(!Flag_Error);
 }
 
 /*================================================================*/
@@ -84,7 +98,9 @@ void ObjectFTPClient::slotClientCommand(bool flag_erase) {
 }
 
 void ObjectFTPClient::slotClientQuit() {
-  FTP_Reply->close();
+  if (FTP_Reply != nullptr) {
+      FTP_Reply->abort();
+    }
 }
 
 void ObjectFTPClient::slotClientTimeout() {
@@ -109,13 +125,13 @@ void ObjectFTPClient::slotFTPFinish() {
   switch (FTP_Reply->operation()) {
     case QNetworkAccessManager::GetOperation: {
         QByteArray bytes_in = FTP_Reply->readAll();
-        FTP_Reply->deleteLater();
+        FTP_Reply->close();
         Q_EMIT signalClientIn(std::vector<char>(bytes_in.begin(), bytes_in.end()));
         Q_EMIT signalClientCommand(true);
         break;
       }
     case QNetworkAccessManager::PutOperation: {
-        FTP_Reply->deleteLater();
+        FTP_Reply->close();
         Q_EMIT signalClientCommand(true);
         break;
       }

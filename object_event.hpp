@@ -10,15 +10,14 @@ class ObjectEvent : public QObject {
 
 public:
   explicit ObjectEvent(QObject* = nullptr);
-  Q_INVOKABLE void initConnect(const std::vector<QObject*>);
-  Q_INVOKABLE bool initConfig();
+  Q_INVOKABLE bool initConfig(const std::vector<QObject*>);
 
 private:
   bool Flag_Debug = false;
 
 private slots:
   void slotEvent(Event_Type, std::string, std::string, std::string);
-  void slotModeDebug(bool);
+  void slotMode_Debug(bool);
 
 signals:
   void signalMessage(std::string);

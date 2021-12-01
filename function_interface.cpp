@@ -1,6 +1,6 @@
 #include <QHeaderView>
 
-#include "CPPLibrary/function_string.hpp"
+#include "function_string.hpp"
 
 #include "function_interface.hpp"
 

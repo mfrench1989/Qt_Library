@@ -16,7 +16,7 @@ public:
   void clientWrite(const std::vector<char>&);
 
 private:
-#define WAIT_CLIENT 1000
+#define WAIT_CLIENT 500
   enum class Command_Type {
     Disconnect,
     Connect,
@@ -45,9 +45,9 @@ private slots:
   void slotClientTimeout();
 
 signals:
-  void signalClientIn(std::vector<char>);
   void signalClientCommand(bool);
   void signalClientComplete(bool);
+  void signalClientIn(std::vector<char>);
   void signalEvent(Event_Type, std::string, std::string, std::string);
 };
 

@@ -24,8 +24,19 @@ public:
   explicit DialogMessage(const std::string&, QWidget* = nullptr);
   ~DialogMessage();
 
+  /**
+   * @brief closeEvent - overwrite close event so accept or reject button has to be pressed
+   */
+  void closeEvent(QCloseEvent*);
+
 private:
   Ui::DialogMessage *ui;
+
+private slots:
+  /*----------------------------------------------------------------*/
+  /*UI Slots*/
+  /*----------------------------------------------------------------*/
+  void on_pushButton_Close_clicked();
 };
 
 #endif // DIALOG_MESSAGE_HPP

@@ -7,20 +7,18 @@
 #include "object_event.hpp"
 
 ObjectEvent::ObjectEvent(QObject *parent) : QObject(parent) {
-  this->setObjectName("Object_Event");
+  this->setObjectName("Event");
   qRegisterMetaType<Event_Type>("Event_Type");
 }
 
 /*================================================================*/
 /*Public Methods*/
 /*================================================================*/
-void ObjectEvent::initConnect(const std::vector<QObject*> vector_connect) {
+bool ObjectEvent::initConfig(const std::vector<QObject*> vector_connect) {
   for (const QObject* object_connect : vector_connect) {
       QObject::connect(this, SIGNAL(signalMessage(std::string)), object_connect, SLOT(slotMessage(std::string)), Qt::QueuedConnection);
     }
-}
 
-bool ObjectEvent::initConfig() {
   slotEvent(Event_Type::Default, this->objectName().toStdString(), stringFuncInfo(this, __func__),
             this->objectName().toStdString() + " configuration finished");
   return true;
@@ -40,7 +38,8 @@ void ObjectEvent::slotEvent(Event_Type event_in, std::string object_in, std::str
   switch (event_in) {
     case Event_Type::Debug: {
         if (Flag_Debug) {
-            Q_EMIT signalMessage(stringHTML(text_in, stringColorHSL(HUE_BLUE, SAT_COLOR, LUM_COLOR), true));
+            Q_EMIT signalMessage(stringHTML("[" + object_in + "]", stringColorHSL(HUE_BASE, SAT_GRAY, LUM_TEXT), true) + "\t" +
+                                 stringHTML(text_in, stringColorHSL(HUE_BLUE, SAT_COLOR, LUM_COLOR), true));
           }
         break;
       }
@@ -69,6 +68,6 @@ void ObjectEvent::slotEvent(Event_Type event_in, std::string object_in, std::str
              "[" + stringDateTime("%H:%M:%S") + "]\t" + string_log);
 }
 
-void ObjectEvent::slotModeDebug(bool mode_in) {
+void ObjectEvent::slotMode_Debug(bool mode_in) {
   Flag_Debug = mode_in;
 }
