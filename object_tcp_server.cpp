@@ -5,7 +5,7 @@
 #include "object_tcp_server.hpp"
 
 ObjectTCPServer::ObjectTCPServer(const std::string& address_in, const std::string& port_in, QObject *parent) : QTcpServer(parent) {
-  this->setObjectName((parent ? this->parent()->objectName() + "_" : "") + "TCPServer");
+  this->setObjectName((parent ? this->parent()->objectName() + "_" : "") + "Server");
 
   Server_Address = address_in;
   Server_Port = port_in;
@@ -14,9 +14,6 @@ ObjectTCPServer::ObjectTCPServer(const std::string& address_in, const std::strin
 
   QObject::connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(slotServerQuit()), Qt::DirectConnection);
   QObject::connect(this, SIGNAL(newConnection()), this, SLOT(slotServerConnect()), Qt::QueuedConnection);
-  QObject::connect(this, SIGNAL(signalEvent(Event_Type,std::string,std::string,std::string)),
-                   parent, SIGNAL(signalEvent(Event_Type,std::string,std::string,std::string)), Qt::DirectConnection);
-
   QObject::connect(this, SIGNAL(signalServerCommand(bool)), this, SLOT(slotServerCommand(bool)), Qt::QueuedConnection);
 }
 

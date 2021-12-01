@@ -40,9 +40,9 @@ private slots:
 
 signals:
   void signalEvent(Event_Type, std::string, std::string, std::string);
-  void signalServerIn(std::vector<char>);
   void signalServerCommand(bool);
   void signalServerComplete(bool);
+  void signalServerIn(std::vector<char>);
 };
 
 #endif // OBJECTTCPSERVER_HPP
