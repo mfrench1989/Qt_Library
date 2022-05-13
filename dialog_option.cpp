@@ -46,6 +46,18 @@ void DialogOption::closeEvent(QCloseEvent *event_in) {
   event_in->ignore();
 }
 
+void DialogOption::keyReleaseEvent(QKeyEvent* event_in) {
+  /*Filter if button is not enabled to prevent spam*/
+  if (!ui->pushButton_Accept->isEnabled()) {
+      return;
+    }
+
+  if (event_in->key() == Qt::Key_Space && event_in->modifiers() ==(Qt::ShiftModifier|Qt::ControlModifier)) {
+      ui->pushButton_Accept->setEnabled(false);
+      on_pushButton_Accept_clicked();
+    }
+}
+
 void DialogOption::on_pushButton_Accept_clicked() {
   accept();
   this->deleteLater();

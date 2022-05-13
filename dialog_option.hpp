@@ -35,6 +35,7 @@ private:
    * @brief closeEvent - overwrite close event so accept or reject button has to be pressed
    */
   void closeEvent(QCloseEvent*);
+  void keyReleaseEvent(QKeyEvent*);
 
 private slots:
   /*----------------------------------------------------------------*/
