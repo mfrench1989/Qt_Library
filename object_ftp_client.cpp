@@ -27,7 +27,7 @@ ObjectFTPClient::ObjectFTPClient(const std::string& address_in, const std::strin
 /*================================================================*/
 void ObjectFTPClient::clientAbort() {
   Time_Out->stop();
-  Vector_Command.clear();
+  List_Command.clear();
   Flag_Error = false;
   if (FTP_Reply != nullptr) {
       FTP_Reply->abort();
@@ -35,16 +35,16 @@ void ObjectFTPClient::clientAbort() {
 }
 
 void ObjectFTPClient::clientRead(const std::string& file_path) {
-  bool flag_empty = Vector_Command.empty();
-  Vector_Command.push_back({Command_Type::Read, "ftp://" + Client_Address + "/" + file_path, std::vector<char>()});
+  bool flag_empty = List_Command.empty();
+  List_Command.push_back({Command_Type::Read, "ftp://" + Client_Address + "/" + file_path, std::vector<char>()});
   if (flag_empty) {
       Q_EMIT signalClientCommand(false);
     }
 }
 
 void ObjectFTPClient::clientWrite(const std::string& file_path, const std::vector<char>& bytes_out) {
-  bool flag_empty = Vector_Command.empty();
-  Vector_Command.push_back({Command_Type::Write, "ftp://" + Client_Address + "/" + file_path, bytes_out});
+  bool flag_empty = List_Command.empty();
+  List_Command.push_back({Command_Type::Write, "ftp://" + Client_Address + "/" + file_path, bytes_out});
   if (flag_empty) {
       Q_EMIT signalClientCommand(false);
     }
@@ -64,29 +64,29 @@ void ObjectFTPClient::clientError(const std::string& function_in, const std::str
 /*Private Slots*/
 /*================================================================*/
 void ObjectFTPClient::slotClientCommand(bool flag_erase) {
-  if (!Vector_Command.empty() && flag_erase) {
-      Vector_Command.erase(Vector_Command.begin());
+  if (!List_Command.empty() && flag_erase) {
+      List_Command.pop_front();
     }
-  if (Vector_Command.empty()) {
+  if (List_Command.empty()) {
       Q_EMIT signalClientComplete(!Flag_Error);
       Flag_Error = false;
       return;
     }
 
   /*Format QUrl*/
-  QUrl request(QString::fromStdString(Vector_Command.front().URL));
+  QUrl request(QString::fromStdString(List_Command.front().URL));
   request.setUserName(QString::fromStdString(Client_Username));
   request.setPassword(QString::fromStdString(Client_Password));
 
   /*Start Time_Out and issue get/put command*/
   Time_Out->start(WAIT_CLIENT);
-  switch (Vector_Command.front().Type) {
+  switch (List_Command.front().Type) {
     case Command_Type::Read: {
         FTP_Reply = this->get(QNetworkRequest(request));
         break;
       }
     case Command_Type::Write: {
-        FTP_Reply = this->put(QNetworkRequest(request), QByteArray(Vector_Command.front().Bytes.data()));
+        FTP_Reply = this->put(QNetworkRequest(request), QByteArray(List_Command.front().Bytes.data()));
         break;
       }
     }
@@ -104,7 +104,7 @@ void ObjectFTPClient::slotClientQuit() {
 }
 
 void ObjectFTPClient::slotClientTimeout() {
-  switch (Vector_Command.front().Type) {
+  switch (List_Command.front().Type) {
     case Command_Type::Read: {
         clientError(stringFuncInfo(this, __func__), "Client read timeout");
         break;

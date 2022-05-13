@@ -21,8 +21,8 @@ ObjectTCPServer::ObjectTCPServer(const std::string& address_in, const std::strin
 /*Public Methods*/
 /*================================================================*/
 void ObjectTCPServer::serverWrite(const std::vector<char>& bytes_out) {
-  bool flag_empty = Vector_Command.empty();
-  Vector_Command.push_back({Command_Type::Write, bytes_out});
+  bool flag_empty = List_Command.empty();
+  List_Command.push_back({Command_Type::Write, bytes_out});
   if (flag_empty) {
       Q_EMIT signalServerCommand(false);
     }
@@ -47,7 +47,7 @@ bool ObjectTCPServer::serverListen() {
 /*================================================================*/
 void ObjectTCPServer::serverError(const std::string& function_in, const std::string& error_in) {
   Flag_Error = true;
-  Vector_Command.clear();
+  List_Command.clear();
   Q_EMIT signalEvent(Event_Type::Error, this->objectName().toStdString(), function_in, error_in);
   Q_EMIT signalServerCommand(false);
 }
@@ -56,23 +56,23 @@ void ObjectTCPServer::serverError(const std::string& function_in, const std::str
 /*Private Slots*/
 /*================================================================*/
 void ObjectTCPServer::slotServerCommand(bool flag_erase) {
-  if (!Vector_Command.empty() && flag_erase) {
-      Vector_Command.erase(Vector_Command.begin());
+  if (!List_Command.empty() && flag_erase) {
+      List_Command.pop_front();
     }
-  if (Vector_Command.empty()) {
+  if (List_Command.empty()) {
       Q_EMIT signalServerComplete(!Flag_Error);
       Flag_Error = false;
       return;
     }
 
-  switch (Vector_Command.front().Type) {
+  switch (List_Command.front().Type) {
     case Command_Type::Write: {
         /*Check connection before writing*/
         if (Server_Socket->state() == QAbstractSocket::ConnectedState ||
             Server_Socket->state() == QAbstractSocket::ConnectingState ||
             Server_Socket->state() == QAbstractSocket::HostLookupState) {
-            char bytes_out[Vector_Command.front().Bytes.size()];
-            std::copy(Vector_Command.front().Bytes.begin(), Vector_Command.front().Bytes.end(), bytes_out);
+            char bytes_out[List_Command.front().Bytes.size()];
+            std::copy(List_Command.front().Bytes.begin(), List_Command.front().Bytes.end(), bytes_out);
             Server_Socket->write(bytes_out, sizeof(bytes_out));
             Server_Socket->flush();
             Q_EMIT signalServerCommand(true);

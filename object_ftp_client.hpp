@@ -34,7 +34,7 @@ private:
   std::string Client_Username;
   QNetworkReply* FTP_Reply;
   QTimer* Time_Out;
-  std::vector<Command_Info> Vector_Command;
+  std::list<Command_Info> List_Command;
 
   void clientError(const std::string&, const std::string&);
 

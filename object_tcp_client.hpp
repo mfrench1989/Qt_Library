@@ -31,9 +31,9 @@ private:
   std::string Client_Address;
   std::string Client_Port;
   QTimer* Time_Out;
-  std::vector<Command_Info> Vector_Command;
+  std::list<Command_Info> List_Command;
 
-  void clearCommand();
+  void clearList();
   void clientError(const std::string&, const std::string&);
 
 private slots:

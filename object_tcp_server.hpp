@@ -27,7 +27,7 @@ private:
   std::string Server_Address;
   std::string Server_Port;
   QTcpSocket* Server_Socket;
-  std::vector<Command_Info> Vector_Command;
+  std::list<Command_Info> List_Command;
 
   void serverError(const std::string&, const std::string&);
 
