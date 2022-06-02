@@ -31,7 +31,8 @@ WindowLogin::~WindowLogin() {
 /*================================================================*/
 /*Public Methods*/
 /*================================================================*/
-bool WindowLogin::initConfig(const QObject* object_event, const std::vector<QObject*> vector_object) {
+bool WindowLogin::initConfig(const QObject* object_event, const std::vector<QObject*> vector_object,
+                             const std::string& string_username, const std::string& string_password) {
   /*Stylesheet*/
   guiFormatPushButton(*ui->pushButton_Logout, HUE_RED, SAT_COLOR);
 
@@ -45,7 +46,15 @@ bool WindowLogin::initConfig(const QObject* object_event, const std::vector<QObj
       QObject::connect(this, SIGNAL(signalModeLogin(Mode_Login)), object_connect, SLOT(slotMode_Login(Mode_Login)), Qt::QueuedConnection);
     }
 
-  Q_EMIT signalModeLogin(Mode_Login::None);
+  if (!string_username.empty() && !string_password.empty()) {
+      ui->lineEdit_Username->setText(QString::fromStdString(string_username));
+      ui->lineEdit_Password->setText(QString::fromStdString(string_password));
+      on_pushButton_Login_clicked();
+    }
+  else {
+      Q_EMIT signalModeLogin(Mode_Login::None);
+    }
+
   Q_EMIT signalEvent(Event_Type::Default, this->objectName().toStdString(), stringFuncInfo(this, __func__),
                      this->objectName().toStdString() + " configuration finished");
   return true;
@@ -76,6 +85,11 @@ void WindowLogin::slotMode_Login(Mode_Login mode_in) {
   ui->lineEdit_Password->clear();
   ui->lineEdit_Username->clear();
   ui->lineEdit_Username->setFocus();
+
+  /*Ensure window is displayed if logged in*/
+  if (Flag_Login != Mode_Login::None) {
+      this->show();
+    }
 }
 
 /*================================================================*/

@@ -15,7 +15,7 @@ class WindowLogin : public QMainWindow {
 public:
   explicit WindowLogin(QWidget* = nullptr);
   ~WindowLogin();
-  bool initConfig(const QObject*, const std::vector<QObject*>);
+  bool initConfig(const QObject*, const std::vector<QObject*>, const std::string&, const std::string&);
 
 private:
   Ui::WindowLogin *ui;
