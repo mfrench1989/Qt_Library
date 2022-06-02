@@ -4,7 +4,7 @@
 #include <QKeyEvent>
 
 #include "CPPLibrary/function_string.hpp"
-#include "function_interface.hpp"
+#include "function_gui.hpp"
 
 #include "function_filter.hpp"
 

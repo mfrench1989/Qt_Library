@@ -1,7 +1,7 @@
 #include <QSettings>
 
 #include "CPPLibrary/function_string.hpp"
-#include "function_interface.hpp"
+#include "function_gui.hpp"
 
 #include "window_login.hpp"
 #include "ui_window_login.h"

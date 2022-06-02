@@ -1,7 +1,7 @@
 #include <QCloseEvent>
 #include <QSettings>
 
-#include "function_interface.hpp"
+#include "function_gui.hpp"
 
 #include "dialog_message.hpp"
 #include "ui_dialog_message.h"
