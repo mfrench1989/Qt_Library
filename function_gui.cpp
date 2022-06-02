@@ -2,7 +2,7 @@
 
 #include "function_string.hpp"
 
-#include "function_interface.hpp"
+#include "function_gui.hpp"
 
 void guiClearLineEdits(const QWidget& widget) {
   for (QLineEdit* line_edit : widget.findChildren<QLineEdit*>()) {
